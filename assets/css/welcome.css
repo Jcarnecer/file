@@ -1,0 +1,188 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,700,900");
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.125em;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%; }
+
+.center-block {
+  display: block;
+  margin: 0 auto; }
+
+p {
+  font-size: 1.125em; }
+
+h1 {
+  margin-bottom: 25px; }
+
+.modal-footer {
+  border: 0; }
+
+.modal .modal-content {
+  border: none; }
+
+.modal label {
+  font-weight: 400; }
+
+.sign-up-btn {
+  background: #38b5ff;
+  -moz-border-radius: 25px;
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
+  border: 0;
+  color: #ffffff;
+  font-weight: 500;
+  padding: 5px 20px 5px 20px; }
+  .sign-up-btn:focus {
+    outline: none;
+    box-shadow: 0 0 6px #273d6a; }
+
+.navbar {
+  background: #ffffff !important;
+  border-bottom: 3px solid #38b5ff; }
+  .navbar .nav-link {
+    color: #1B1B1B !important;
+    font-weight: 400;
+    text-transform: uppercase; }
+    .navbar .nav-link:hover {
+      color: #38b5ff !important; }
+  .navbar .sign-up-btn {
+    margin: 0.3rem;
+    width: auto; }
+
+.title {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 0; }
+
+.first-fold {
+  margin-top: -65px; }
+  .first-fold .sign-up-btn {
+    width: 250px; }
+
+.products-section {
+  padding: 30px 0px 30px 0px; }
+  .products-section p.product-name {
+    font-weight: 500;
+    margin-bottom: 0; }
+  .products-section p.product-description {
+    font-size: .8em; }
+  .products-section .sign-up-btn {
+    width: 250px; }
+
+.plans-section {
+  background: #273d6a;
+  background: -moz-linear-gradient(top, #38b5ff 0%, #273d6a 100%);
+  background: -webkit-linear-gradient(top, #38b5ff 0%, #273d6a 100%);
+  background: linear-gradient(to bottom, #38b5ff 0%, #273d6a 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#38b5ff', endColorstr='#273d6a',GradientType=0 );
+  color: #ffffff;
+  padding: 30px 0px 30px 0px; }
+  .plans-section sup {
+    font-size: 30%;
+    padding-left: 5px;
+    top: -1.6em; }
+  .plans-section h2 {
+    font-size: 3em; }
+  .plans-section .plan-name {
+    font-weight: 400; }
+  .plans-section .recommended-banner {
+    background: #66BB6A;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding: 5px;
+    text-transform: uppercase; }
+  .plans-section .recommended-plan {
+    background: rgba(255, 255, 255, 0.2);
+    border: 4px solid #ffffff;
+    overflow: hidden; }
+  .plans-section .sign-up-btn {
+    margin-bottom: 30px; }
+  .plans-section .per-month-text {
+    font-size: .7em; }
+  .plans-section ul li {
+    font-size: .8em; }
+
+.get-started-section {
+  background: #ebebeb;
+  padding: 50px 0px 50px 0px; }
+  .get-started-section h1 {
+    margin-bottom: 20px; }
+
+footer {
+  background: #273d6a;
+  color: #ffffff;
+  padding: 20px 0 20px 0; }
+  footer a {
+    color: #ffffff; }
+    footer a:hover {
+      color: #38b5ff; }
+  footer .footer-heading {
+    font-size: .8em;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 20px; }
+  footer .footer-content {
+    font-size: .7em;
+    font-weight: 400;
+    text-decoration: none; }
+  footer .footer-icon {
+    font-size: 1.5em;
+    padding: 5px; }
+
+.footer-hr {
+  margin: .3em 0 .3em 0;
+  border-top: 1px solid #ffffff;
+  opacity: .3; }
+
+@media screen and (max-width: 300px) {
+  .first-fold {
+    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.7)), url("../images/home_bg_300.png") no-repeat left center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; } }
+
+@media screen and (min-width: 301px) and (max-width: 600px) {
+  .first-fold {
+    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.7)), url("../images/home_bg_600.png") no-repeat left center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; } }
+
+@media screen and (min-width: 601px) and (max-width: 800px) {
+  .first-fold {
+    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.7)), url("../images/home_bg_800.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; } }
+
+@media screen and (min-width: 801px) and (max-width: 1366px) {
+  .first-fold {
+    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.7)), url("../images/home_bg_1366.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; } }
+
+@media screen and (min-width: 1001px) {
+  .first-fold {
+    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.7)), url("../images/home_bg_1920.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; } }
+
+@media screen and (max-width: 767px) {
+  .products-section {
+    text-align: center; }
+  h1 {
+    font-size: 2em; }
+  .plans-section h2 {
+    font-size: 2em; } }

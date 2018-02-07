@@ -1,0 +1,201 @@
+body {
+  background-color: #f2f2f2;
+  font-size: 14px; }
+
+.navbar-custom {
+  background-color: #ffffff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.15);
+  justify-content: left; }
+
+  .custom-button{
+    background-color: #38b5ff;
+    border: none;
+    color: #ffffff;
+    font-size: 14px; }
+    .custom-button:hover{
+      background-color: #3679b2; }
+      
+  .btn-group .btn-custom {
+  border: 1px solid #cccccc;
+  color: inherit !important; }
+  .btn-group .btn-custom:focus {
+    box-shadow: none;
+    outline: none !important;
+    border-color: #80bdff; }
+  
+  .navbar-custom {
+    background-color: #ffffff;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.15);
+    color: #38b5ff;
+    justify-content: left;
+    margin-bottom: 20px; }
+    .navbar-custom a {
+      color: #626262; }
+      .navbar-custom a:hover {
+        color: #3679b2;
+        text-decoration: none; }
+  
+  #sidebar {
+    width: 210px;
+    height: 100%;
+    position: fixed;
+    background: #273d6a;
+    overflow-y: scroll;
+    transition: .5s;
+    -webkit-transition: .5s;
+    -moz-transition: .5s; }
+    #sidebar .logo {
+      margin: 15px auto; }
+    #sidebar .sidebar-menu {
+      padding-top: 50px; }
+    #sidebar ul, #sidebar li {
+      list-style: none; }
+    #sidebar a {
+      border-left: 5px solid transparent;
+      color: #ffffff;
+      display: block;
+      padding: 15px 30px 15px 30px;
+      white-space: nowrap; }
+      #sidebar a:hover {
+        background-color: #082742;
+        border-left: 5px solid #3679b2;
+        text-decoration: none; }
+      #sidebar a span {
+        display: inline-grid;
+        white-space: normal; }
+    #sidebar .active {
+      background-color: #082742;
+      border-left: 5px solid #3679b2; }
+    #sidebar ul.sub li {
+      padding-left: 30px; }
+    #sidebar ul.sub a {
+      white-space: normal; }
+  
+  .hidden-toggle {
+    display: none; }
+  
+  .title {
+    display: inline-block; }
+  
+  .main-content {
+    margin-left: 210px;
+    overflow: hidden;
+    transition: .5s;
+    -webkit-transition: .5s;
+    -moz-transition: .5s; }
+  
+  #nav-icon-close {
+    float: right;
+    margin: 10px; }
+  
+  #nav-icon-close span {
+    background: #ffffff;}
+    
+  #nav-icon-open {
+    margin-right: 10px; }
+  
+  #nav-icon-open span {
+    background: #626262;}
+  
+  .custom-toggle {
+    cursor: pointer;
+    height: 25px;
+    position: relative;
+    width: 30px; }
+  
+  .custom-toggle span {
+    
+    border-radius: 9px;
+    display: block;
+    height: 3px;
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    width: 100%; }
+  
+  /* Icon 3 */
+  #nav-icon-open span:nth-child(1) {
+    top: 0px; }
+  
+  #nav-icon-open span:nth-child(2) {
+    top: 9px; }
+  
+  #nav-icon-open span:nth-child(3) {
+    top: 19px; }
+  
+  #nav-icon-close span:nth-child(1) {
+    top: 15px;
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg); }
+  
+  #nav-icon-close span:nth-child(2) {
+    top: 15px;
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg); }
+  
+  .custom-responsive {
+    display: block;
+    overflow: auto; }
+  
+  .img-avatar {
+    border-radius: 50%;
+    height: 32px;
+    width: 32px;
+  }
+  
+  @media only screen and (max-width: 768px) {
+    #sidebar {
+      height: 100%;
+      margin-left: -210px;
+      position: fixed;
+      z-index: 99; }
+    .main-content {
+      margin-left: 0;
+      position: relative; }
+    .navbar-custom {
+      z-index: 99; }
+    .hidden-toggle {
+      display: block; }
+    #nav-icon-close {
+      display: none; }
+    .form-horizontal .control-label {
+      text-align: left; } }
+
+.project-buttons {
+  border-bottom: 3px solid #38b5ff;
+}
+
+.project-button {
+  padding-bottom: 15px;
+  padding-top: 15px;
+  color: #626262;
+  background-color: #f2f2f2;
+}
+
+.project-button:hover {
+  background-color: #3679b2;
+  color: #ffffff;
+}
+
+.project-button.active {
+  background-color: #38b5ff;
+  color: #ffffff;
+}
+
+.secondary-button {
+  border-left: none;
+  border-right: none;
+  color: #626262;
+  padding-bottom: 13px;
+  padding-top: 10px;
+}
+
+.secondary-button:hover {
+  color: #3679b2;
+}
+
+.secondary-button:focus {
+  box-shadow: none;
+}
