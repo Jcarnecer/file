@@ -141,9 +141,8 @@ $autoload['language'] = array();
 $autoload['model'] = [
 	"Project_Model" => "project",
 	"Member_Model" => "member",
-	"Thread_Model" => "thread",
-	"Reply_Model" => "reply",
+	"Folder_Model" => "folder",
+	"File_Model" => "file",
 	"User_Model" => "user",
-	"ActivityLog_Model" => "activity_log",
 	"RolePermission_Model" => "role_permission"
 ];
