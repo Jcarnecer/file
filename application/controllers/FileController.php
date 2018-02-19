@@ -29,10 +29,19 @@ class FileController extends BaseController
 			$this->folder->insert($data);
 		}
 
+		$data['current_directory'] = $this->folder
+			->with('file')
+			->get_by([
+				'id' => $id,
+				'root' => TRUE
+			]);
+
+		//print_r($data);
+
 		return parent::main_page("file/index", $data ?? null);
 	}
 
-<<<<<<< HEAD
+	/*
 	public function make_new_folder() {
 		$this->load->library('Utilities');
 
@@ -65,15 +74,19 @@ class FileController extends BaseController
 		
 		//echo json_encode($result);
 	}
+	*/
 
 	public function add_file(){
+		$this->load->library('Utilities');
+		$gen_file_name = $this->utilities->create_random_string(11);
 		$config['upload_path'] = './uploads/';
 		$config['allowed_types'] = 'txt|doc|docx|xls|xlsx|ppt|pptx|zip|rar|jpg|gif|png';
 		$config['max_size'] = 120000;
 		$config['max_filename'] = 255;
 		$config['max_filename_increment'] = 999;
-		$config['encrypt_name'] = TRUE;
+		//$config['encrypt_name'] = TRUE;
 		$config['remove_spaces'] = TRUE;
+		$config['file_name'] = $gen_file_name;
 
 		//var_dump($config); die;
 
@@ -89,19 +102,23 @@ class FileController extends BaseController
 		else
 		{	
 			$new_file_data = array(
-				'id' => $this->upload->data('raw_name'),
-				'name' => $this->upload->data('orig_name'),
-				'type' => $this->upload->data('file_ext'),
-				'parent' => $this->session->project['id'],
-				'company_id' => $this->session->project['company_id'],
-				'project_id' => $this->session->project['id'],
-				'owner_id' => $this->session->user->id,
-				'path' => $this->upload->data('file_name')
+				'id' => $gen_file_name,
+				'name' => $this->upload->data('client_name'),
+				//'type' => $this->upload->data('file_ext'),
+				'location' => $this->session->project['id'],
+				//'company_id' => $this->session->project['company_id'],
+				//'project_id' => $this->session->project['id'],
+				'created_by' => $this->session->user->id,
+				'updated_by' => $this->session->user->id,
+				'created_at' => date("Y-m-d H:i:s"),
+				'updated_at' => date("Y-m-d H:i:s"),
+				'deleted' => 0,
+				'source' => "uploads/" . $this->upload->data('file_name')
 			);
 
-			//var_dump($new_file_data); die;
+			// var_dump($new_file_data); die;
 			
-			if ($this->Files_Model->create_folder($new_file_data)) {
+			if ($this->file->insert($new_file_data)) {
 				echo "ERROR IN INSERTING"; die;
 			}
 
@@ -109,7 +126,14 @@ class FileController extends BaseController
 			redirect("project/$project_id");
 		}
 	}
-=======
+
+	public function delete_file($id){
+		$this->file->delete($id);
+		
+		$project_id = $this->session->project['id'];
+		redirect("project/$project_id");
+	}
+	
 	/* ************** These are functions to be used when creating new folders.. to be updated ***************** @author JM
 	public function create_folder($id) {
 
@@ -134,5 +158,4 @@ class FileController extends BaseController
 		return $this->folder->update($data)
 	}
 	*/
->>>>>>> master
 }

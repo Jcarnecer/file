@@ -8,7 +8,6 @@
 		<base href="<?= base_url() ?>" />
 		<link rel="stylesheet" type="text/css" href="assets/css/flavored-reset-and-normalize.css" />
 		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css" />
-		<!-- <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" /> -->
 		<link rel="stylesheet" type="text/css" href="assets/css/styles.css" />
 		<link rel="stylesheet" type="text/css" href="assets/css/forum.css"/>
 		<link rel="stylesheet" type="text/css" href="assets/css/richtext.min.css"/>
@@ -23,7 +22,5 @@
 
         <!-- Custom js	-->
 		<script src="assets/js/custom.js"></script>
-		<!-- <script src="assets/js/file-manager.js"></script> -->
-
 	</head>
 	<body>

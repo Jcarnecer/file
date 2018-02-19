@@ -27,9 +27,10 @@ class BaseController extends CI_Controller {
 
 			//var_dump($this->session->project); die;
 
-			$data["current_project"] = $this->session->project['name'];
-			$data['current_folder'] = $this->session->project['id'];
-
+			//$data["current_project"] = $this->session->project['name'];
+			//$data["current_folder"] = $this->session->project['id'];
+			//print_r($this->folder->with('file')->get_by('id', 'PRJiI8OdOQC'));
+			// print_r($this->folder->with('file')->get_all());
 			$folders = $this->Files_Model->get_folders($this->session->project['id']);
 			$content = $this->Files_Model->get_contents($this->session->project['id']);
 
