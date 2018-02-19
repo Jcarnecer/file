@@ -13,20 +13,26 @@ class FileController extends BaseController
 
 	public function project($id) {
 
-		foreach ($this->thread->with('reply')->get_many_by(["project_id" => $id]) as $thread) {
-			
-			unset($thread['project_id']);
-			unset($thread['deleted']);
-			$data['threads'][]=$thread;
-		}
 		$project = $this->project->get($id);
 		$this->session->set_userdata(['project' => $project]);
 		
 		//var_dump($data['dirs']); die;
 
+		// creates new root folder of project if there is none
+		$folder = $this->folder->get($id);
+		if(!isset($folder)){
+			$data = [
+				'id' => $id,
+				'name' => $project['name'],
+				'root' => TRUE
+			];
+			$this->folder->insert($data);
+		}
+
 		return parent::main_page("file/index", $data ?? null);
 	}
 
+<<<<<<< HEAD
 	public function make_new_folder() {
 		$this->load->library('Utilities');
 
@@ -103,4 +109,30 @@ class FileController extends BaseController
 			redirect("project/$project_id");
 		}
 	}
+=======
+	/* ************** These are functions to be used when creating new folders.. to be updated ***************** @author JM
+	public function create_folder($id) {
+
+		$data = [
+			'id' => //generate id,
+			'name'=> $this->input->post('name'),
+			'location' => $id,
+			'root' => FALSE
+
+		];
+
+		return $this->folder->insert($data);
+	}
+
+	public function update_folder($id) {
+
+		$data = [
+			'name' => $this->input->post('name'),
+			'location' => $id
+		];
+
+		return $this->folder->update($data)
+	}
+	*/
+>>>>>>> master
 }
