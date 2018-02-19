@@ -7,6 +7,6 @@ $route["default_controller"] = "SiteController/index";
 $route['project/(:any)'] = "FileController/project/$1";
 
 # api
-
+# $route['api/get_contents'] = 'FileController/show_all_contents';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

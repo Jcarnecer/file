@@ -199,3 +199,19 @@ body {
 .secondary-button:focus {
   box-shadow: none;
 }
+
+.file-drawer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.file-item {
+  border: black 1px solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  background: none;
+}
