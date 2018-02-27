@@ -200,18 +200,11 @@ body {
   box-shadow: none;
 }
 
-.file-drawer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
+.table-row-first {
+  margin-left: 50px;
 }
 
-.file-item {
-  border: black 1px solid;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 1.5rem;
-  background: none;
+table p {
+  font-size: 1.1rem;
+  margin: 0;
 }
