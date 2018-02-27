@@ -98,7 +98,7 @@ class FileController extends BaseController
         $gen_file_name = $this->utilities->create_random_string(11); // create file name
 
         $config['file_name'] = $gen_file_name;
-        $config['upload_path'] = './uploads/';
+        $config['upload_path'] = './assets/uploads/';
         $config['allowed_types'] = 'txt|doc|docx|xls|xlsx|ppt|pptx|zip|rar|jpg|gif|png';
         $config['max_size'] = 120000; //120MB Max upload Size
         $config['max_filename'] = 255;
@@ -128,7 +128,7 @@ class FileController extends BaseController
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s"),
                 'deleted' => 0,
-                'source' => "uploads/" . $this->upload->data('file_name'),
+                'source' => "assets/uploads/" . $this->upload->data('file_name'),
             );
 
             // var_dump($new_file_data); die;
