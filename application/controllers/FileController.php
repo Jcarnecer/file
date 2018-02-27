@@ -90,7 +90,7 @@ class FileController extends BaseController
 
     //echo json_encode($result);
     }
-     */
+    */
 
     public function add_file()
     {
@@ -111,11 +111,9 @@ class FileController extends BaseController
         $this->upload->initialize($config);
 
         if (!$this->upload->do_upload('new_file')) {
-            // @TODO create error handling
-
-            //$data = array('upload_data' => $this->upload->data());
             $error = array('error' => $this->upload->display_errors());
-            var_dump($error);die;
+            
+            print_r($error);
 
         } else {
             $new_file_data = array(
@@ -136,45 +134,36 @@ class FileController extends BaseController
             // var_dump($new_file_data); die;
 
             if ($this->file->insert($new_file_data)) {
-                //@TODO create insert error handling
                 echo "ERROR IN INSERTING";die;
+                
             }
-
-            $project_id = $this->session->project['id'];
-            redirect("project/$project_id");
         }
     }
 
     public function delete_file($id)
     {
-        $this->file->delete($id);
-
-        $project_id = $this->session->project['id'];
-        redirect("project/$project_id");
+        $this->file->delete($id);   
     }
 
     /* ************** These are functions to be used when creating new folders.. to be updated ***************** @author JM
-public function create_folder($id) {
+    public function create_folder($id) {
+        $data = [
+            'id' => //generate id,
+            'name'=> $this->input->post('name'),
+            'location' => $id,
+            'root' => FALSE
+        ];
 
-$data = [
-'id' => //generate id,
-'name'=> $this->input->post('name'),
-'location' => $id,
-'root' => FALSE
+        return $this->folder->insert($data);
+    }
 
-];
+    public function update_folder($id) {
+        $data = [
+            'name' => $this->input->post('name'),
+            'location' => $id
+        ];
 
-return $this->folder->insert($data);
-}
-
-public function update_folder($id) {
-
-$data = [
-'name' => $this->input->post('name'),
-'location' => $id
-];
-
-return $this->folder->update($data)
-}
- */
+        return $this->folder->update($data)
+    }
+    */
 }

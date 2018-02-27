@@ -1,4 +1,4 @@
-<div class="container-fluid h-100">
+<div class="container-fluid h-100" >
     <div class="row h-100">
 
         <!-- FILE TREE -->
@@ -13,10 +13,10 @@
 
         <!-- FILE BROWSER -->
         <section class="col-md h-100 p-0" style="display: flex; flex-direction: column;">
-            <div class="bg-light w-100 py-3 px-5 clearfix">
+            <div class="bg-light w-100 py-3 px-5 clearfix" style="">
                 <nav class="text-secondary float-left" style="font-size:1.5rem;"><?=$current_directory['name']?></nav>
                 <div class="float-right">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#new_file_modal"><i class="fas fa-upload"></i>&nbsp;Upload File</button>
+                    <button id="upload_modal_trigger" class="btn btn-primary" data-toggle="modal" data-target="#new_file_modal"><i class="fas fa-upload"></i>&nbsp;Upload File</button>
 
                     <!-- <button class="btn btn-info" data-toggle="modal" data-target="#new_dir_modal"><i class="fas fa-plus"></i>&nbsp;Add Folder</button> -->
                 </div>
@@ -26,7 +26,7 @@
                         <?=form_open('FileController/make_new_folder', 'id="new_folder_form", name="new_folder_form"');?>
                         <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Create New Folder</h5>
+                            <h5 class="modal-title" id="modal-title">Create New Folder</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
@@ -51,20 +51,23 @@
                         <div class="modal-content">
                             <?=form_open_multipart('FileController/add_file', 'id="new_file_form", name="new_file_form"');?>
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Upload New File</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <h5 class="modal-title" id="modal-title">Upload New File</h5>
+                                <button id='close_upload' type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
                                 <div class="col card p-3">
+                                    <div class="progress m-3" id='progress' hidden>
+                                        <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                                    </div>
+                                    <p id="upload_status" class="text-center" hidden></p>
                                     <input type="file" class="w-100" id="new_file" name="new_file">
                                 </div>
-                                <?php //echo $error;?>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary" value="submit">Upload</button>
+                                <button id='cancel_upload' type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button id='upload' type="submit" class="btn btn-primary" value="submit">Upload</button>
                             </div>
                             <?=form_close();?>
                         </div>
@@ -72,18 +75,36 @@
                 </div>
             </div>
 
-            <div class="dir-content p-0" style="flex:1;">
-                    <table class="table table-hover">
-                        <thead class="text-secondary">
-                            <th class=""><span class="table-row-first">Name</span></th>
-                            <th class="" style="width:15%;">Last Modified</td>
-                            <th class="" style="width:15%;">Date Created</th>
-                            <th class=""></th>
-                        </thead>
-                        <tbody id="file_browser">
-                            <!-- AJAX FILES HERE -->
-                        </tbody>
-                    </table>
+            <div class="p-0" style="flex:1;" >
+                <table class="table table-hover" >
+                    <thead class="text-secondary">
+                        <th class=""><span class="table-row-first">Name</span></th>
+                        <th class="" style="width:15%;">Last Modified</td>
+                        <th class="" style="width:15%;">Date Created</th>
+                        <th class=""></th>
+                    </thead>
+                    <tbody id="file_browser" >
+                        <!-- AJAX FILES HERE -->
+                    </tbody>
+                </table>
+
+                <!-- ERROR MODAL -->
+                <div id="error_modal" class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog " role="document">
+                        <div class="modal-content" style="background-color:pink;">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Error!</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <p class="font-weight-bold">Something has gone wrong.</p>
+                                <p id="error_code" class="text-danger">error code: </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- DELETE MODAL -->
                 <div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-labelledby="DeleteFile" aria-hidden="true">
@@ -100,7 +121,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                                <a href="" class="btn btn-danger">Yes, I want to delete this file</a>
+                                <button id="deleteFile_btn" data-fileid="" class="btn btn-danger">Yes, I want to delete this file</button>
                             </div>
                         </div>
                     </div>

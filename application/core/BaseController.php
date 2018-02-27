@@ -31,11 +31,11 @@ class BaseController extends CI_Controller {
 			//$data["current_folder"] = $this->session->project['id'];
 			//print_r($this->folder->with('file')->get_by('id', 'PRJiI8OdOQC'));
 			// print_r($this->folder->with('file')->get_all());
-			$folders = $this->Files_Model->get_folders($this->session->project['id']);
-			$content = $this->Files_Model->get_contents($this->session->project['id']);
+			// $folders = $this->Files_Model->get_folders($this->session->project['id']);
+			// $content = $this->Files_Model->get_contents($this->session->project['id']);
 
-			$data['folders'] = $folders;
-			$data['current_dir_contents'] = $content;
+			// $data['folders'] = $folders;
+			// $data['current_dir_contents'] = $content;
 
 			$this->load->helper('form');
 			$this->load->view("partial/header", ["title" => $title]);
