@@ -13,7 +13,8 @@ body {
     color: #ffffff;
     font-size: 14px; }
     .custom-button:hover{
-      background-color: #3679b2; }
+      background-color: #3679b2;
+      color: #ffffff; }
       
   .btn-group .btn-custom {
   border: 1px solid #cccccc;
@@ -164,47 +165,60 @@ body {
       text-align: left; } }
 
 .project-buttons {
+  background-color: #3679b2;
   border-bottom: 3px solid #38b5ff;
+  padding-bottom: 4px;
+  text-align: center;
+}
+
+.project-buttons .dropdown .dropdown-menu {
+  margin-left: 50%;
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  border-radius: 0;
+}
+
+.navlink:hover {
+  border: none;
 }
 
 .project-button {
-  padding-bottom: 15px;
-  padding-top: 15px;
-  color: #626262;
-  background-color: #f2f2f2;
+  background-color: #3679b2;
+  border: none;
+  color: #ffffff;
+  padding: 10px;
 }
 
 .project-button:hover {
   background-color: #3679b2;
-  color: #ffffff;
+  color: #38b5ff;
 }
 
-.project-button.active {
-  background-color: #38b5ff;
-  color: #ffffff;
+.nav-link.project-button.active, .nav-link.secondary-button.active {
+  background-color: #38b5ff !important;
+  border: none;
+  color: #ffffff !important;
+}
+
+.nav-link.secondary-button.active {
+  border-top-left-radius: 8px;
+  position: relative;
 }
 
 .secondary-button {
-  border-left: none;
-  border-right: none;
-  color: #626262;
-  padding-bottom: 13px;
-  padding-top: 10px;
+  background-color: #3679b2;
+  border: none;
+  color: #ffffff;
+  padding: 10px;
 }
 
 .secondary-button:hover {
-  color: #3679b2;
+  color: #38b5ff;
+  
 }
 
 .secondary-button:focus {
   box-shadow: none;
-}
-
-.table-row-first {
-  margin-left: 50px;
-}
-
-table p {
-  font-size: 1.1rem;
-  margin: 0;
 }

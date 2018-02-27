@@ -69,15 +69,15 @@
     </div>
     
     <div class="inner-content d-flex flex-column p-0">
-        <div class="d-flex w-100 project-buttons">
-            <a href="
-                <?php
-                    if(ENVIRONMENT==="development") {
-                        echo "http://localhost/task/project/" . $project['id'];
-                    } else {
-                        echo "http://task.payakapps.com/project/" . $project['id'];
-                    }
-                ?>" class="btn btn-lg w-50 project-button rounded-0"><i class="fa fa-tasks"></i> Tasks</a>
-            <a href="<?= base_url('/project/' . $project['id']) ?>" onclick="javascript:void(0)" class="btn btn-lg project-button active w-50 rounded-0"><i class="fa fa-exchange-alt"></i> Forum</a>
-        </div>
+        <ul class="nav nav-tabs d-flex flex-nowrap project-buttons">
+            <li class="nav-item w-100">
+                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/task/project/' . $project['id'] : 'http://task.payakapps.com//project/' . $project['id'] ?>" class="nav-link project-button" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i> Tasks</a>
+            </li>
+            <li class="nav-item w-100">
+                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/forum/project/' . $project['id'] : 'http://forum.payakapps.com//project/' . $project['id'] ?>" class="nav-link secondary-button"><i class="fa fa-exchange-alt"></i> Discussion</a>
+            </li>
+            <li class="nav-item w-100">
+                <a href="<?= base_url('/project/' . $project['id']) ?>" onclick="javascript:void(0)" class="nav-link secondary-button active"  role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-file"></i> Files</a>
+            </li>
+        </ul>
         <div class="h-100 w-100" style="overflow-y: auto;">
