@@ -6,14 +6,18 @@ $(document).ready(function () {
     var newFileForm = $('#new_file_form');
     var cancel_button = (newFileForm).find('button#cancel_upload');
     var submit_button = (newFileForm).find('button#upload');
+    var retry_button = (newFileForm).find('button#retry_upload');
     var close_button = (newFileForm).find('button#close_upload');
     var file_input = (newFileForm).find('input#new_file');
-    var upload_status = newFileForm.find('p#upload_status');
+    var upload_status = newFileForm.find('div#upload_status');
     var progress = $('div#progress');
     var progressBar = $('#progressBar');
     var upload_modal_trigger = $('button#upload_modal_trigger');
+    var instructions_div = $('div#instructions');
 
     var fileID = "";
+    var errorHTML = '<h4 class="text-danger font-weight-bold">Oops!</h4>';
+    var xhr = new window.XMLHttpRequest();
 
     // refresh files on load
     refresh();
@@ -93,7 +97,7 @@ $(document).ready(function () {
         // content html of each td
 
         // build file icon
-        var fileIcon_str = "<span class='fas fa-file fa-2x mr-5'></span>";
+        var fileIcon_str = "<span class='fas fa-file fa-2x mx-5'></span>";
 
         var fileName_str = // file name
             tdOpeningTag_str +
@@ -167,68 +171,92 @@ $(document).ready(function () {
     // ------------------------------------- //
 
     // reset buttons to default states
-    upload_modal_trigger.click(function () {
+    upload_modal_trigger.click(
+        function (e) {
+            resetUploadButtons();
+        }
+    );
+
+    function resetUploadButtons() {
+        instructions_div.css({
+            "height":"auto",
+            "opacity": "1"
+            }
+        );
+        file_input.val(null);
+
+        // status texts
+        if (!upload_status.is(':empty')) {
+            upload_status.empty();
+        }
+        upload_status.attr('hidden', 'true');
 
         // cancel button
         if (cancel_button.hasClass('btn-primary')) {
             cancel_button.removeClass('btn-primary');
         }
-        if (cancel_button.hasClass('btn-danger')) {
-            cancel_button.removeClass('btn-danger');
-        }
-        cancel_button.addClass('btn-secondary');
-        cancel_button.text('Close');
 
         // submit button
-        if (submit_button.hasClass('btn-success')) {
-            submit_button.removeClass('btn-success');
+        submit_button.removeAttr('hidden');
+
+        // progress bar
+        if (progressBar.hasClass('bg-danger')) {
+            progressBar.removeClass('bg-danger');
         }
-        if (submit_button.hasClass('btn-warning')) {
-            submit_button.removeClass('btn-warning');
+        if (progressBar.hasClass('bg-success')) {
+            progressBar.removeClass('bg-success');
         }
-        submit_button.addClass('btn-primary')
-            .removeAttr('disabled')
-            .text('Upload');
+        progressBar.css('width', '0%');
+        progress.attr('hidden', 'true');
 
         // file input
         file_input.removeAttr('hidden');
-
-        // close button
         close_button.removeAttr('hidden');
+        retry_button.attr('hidden', 'true');
+        submit_button.attr('disabled', 'true');
+    }
 
-        // progress bar
-        progress.attr('hidden', 'true');
-        upload_status.attr('hidden', 'true');
-    });
+    retry_button.click(
+        function () {
+            resetUploadButtons();
+        }
+    );
+
+    // make sure a file is selected
+    file_input.change(
+        function (e) {
+            upload_status.empty().attr('hidden', 'true');
+            if ($(this).val && $(this)[0].files[0].size < 120000000) {
+                submit_button.removeAttr('disabled');
+            } else {
+                upload_status.append('<p class="text-danger"><small>That file is too large</small></p>')
+                    .removeAttr('hidden');
+            }
+        }
+    );
 
     newFileForm.submit(
         function (e) {
             e.preventDefault();
-
+            instructions_div.animate(
+                {
+                    height: '0px',
+                    opacity: '0'
+                },
+                500
+            );
             // Show progress bar and change button context
-            cancel_button.removeClass('btn-secondary')
-                .addClass('btn-danger')
-                .text('Cancel');
-
-            submit_button.removeClass('btn-primary')
-                .addClass('btn-warning')
-                .attr('disabled', 'true')
-                .text('Uploading...');
-
+            submit_button.attr('hidden', 'true');
             progress.removeAttr('hidden');
-
             file_input.attr('hidden', 'true');
-
             close_button.attr('hidden', 'true');
-
+            cancel_button.removeAttr('hidden', 'true')
+         
             $.ajax({
                 xhr: function () { // loader logic
-                    var xhr = new window.XMLHttpRequest();
-
                     xhr.upload.addEventListener('progress', function (e) {
                         if (e.lengthComputable) {
-                            var percent = Math.round((e.loaded / e.total)) * 100;
-                            console.log(percent);
+                            var percent = Math.round((e.loaded / e.total) * 100);
                             progressBar.attr('aria-valuenow', percent).css('width', percent + '%');
                         }
                     });
@@ -238,6 +266,7 @@ $(document).ready(function () {
                 url: 'add_file',
                 type: 'POST',
                 data: new FormData(this),
+                dataType: 'json',
                 contentType: false,
                 cache: false,
                 processData: false,
@@ -246,43 +275,81 @@ $(document).ready(function () {
             ).done(
                 function (data) {
                     refresh();
-                    cancel_button.removeClass('btn-danger')
-                        .addClass('btn-primary')
-                        .text('Close');
 
-                    submit_button.removeClass('btn-warning')
-                        .addClass('btn-success')
-                        .attr('disabled', 'true')
-                        .text('Upload Complete!');
+                    if (file_input[0].files[0].size === 0) {
+                        uploadErrorBtnState('Your file does not contain anything!');
+                        return;
+                    }
+
+                    if (data.error != null) {
+                        uploadErrorBtnState(data.error);
+                        return;
+                    }
+
+                    cancel_button.attr('hidden', 'true');
 
                     close_button.removeAttr('hidden');
 
+                    retry_button
+                        .text('Upload another file')
+                        .removeClass('btn-warning')
+                        .addClass('btn-secondary')
+                        .removeAttr('hidden');
+
                     upload_status.removeAttr('hidden')
-                        .text('Your file has been uploaded!');
+                        .append('Your file has been uploaded!');
 
                     progressBar.addClass('bg-success');
                 }
             ).fail(
-                function (data) {
-                    cancel_button.removeClass('btn-danger')
-                        .addClass('btn-primary')
-                        .text('Cancel');
+                function (xhr, status, error) {
+                    refresh();
 
-                    submit_button.removeClass('btn-primary')
-                        .addClass('btn-warning')
-                        .attr('disabled', 'true')
-                        .text('Error');
+                    if (xhr.readyState === 0) {
+                        uploadErrorBtnState('Upload has been interrupted');
+                        retry_button
+                            .text('Upload another')
+                            .removeClass('btn-warning')
+                            .removeAttr('hidden');
 
-                    file_input.attr('hidden', 'true');
+                        return;
+                    }
 
-                    close_button.attr('hidden', 'true');
+                    if (file_input[0].files[0].size >= 120000000) {
+                        uploadErrorBtnState('Your file exceeds maximum size allowed!');
+                        return;
+                    }
 
-                    progressBar.addClass('bg-danger');
+                    errorText = 'Could not connect to the server.';
+                    uploadErrorBtnState(errorText);
                 }
             );
         }
     );
 
+    function uploadErrorBtnState(error) {
+        upload_status.removeAttr('hidden')
+            .empty()
+            .append(errorHTML)
+            .append(error);
+
+        close_button.removeAttr('hidden');
+
+        retry_button.removeAttr('hidden');
+
+        cancel_button.attr('hidden', 'true');
+
+        file_input.attr('hidden', 'true');
+
+        progressBar.addClass('bg-danger');
+    }
+
+    // cancel button
+    cancel_button.click(
+        function () {
+            xhr.abort();
+        }
+    );
 
     // ------------------------------------- //
     // MODALS
@@ -290,18 +357,17 @@ $(document).ready(function () {
     // ------------------------------------- //
 
     // dynamically generate delete modal contents
-    $('#delete_modal')
-        .on(
-            'show.bs.modal',
-            function (event) {
-                var rowFileID = $(event.relatedTarget).data('fileid'); // Extract info button's from data-* attributes
-                var modal = $(this);
-                
-                fileID = rowFileID;
+    $('#delete_modal').on(
+        'show.bs.modal',
+        function (event) {
+            var rowFileID = $(event.relatedTarget).data('fileid'); // Extract info button's from data-* attributes
+            var modal = $(this);
 
-                console.log('modal show fileIDs: ' + fileID);
-            }
-        );
+            fileID = rowFileID;
+
+            console.log('modal show fileIDs: ' + fileID);
+        }
+    );
 
     $('#deleteFile_btn').click(
         function (e) {
@@ -320,12 +386,11 @@ $(document).ready(function () {
                 }
             ).fail(
                 function (data) {
-                    console.log (data + " error");
+                    console.log(data + " error");
                 }
             );
 
             $('#delete_modal').modal('hide');
         }
-    )
-
+    );
 });
