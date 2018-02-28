@@ -6,6 +6,7 @@ class BaseController extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
+		$this->load->model('Files_Model');
 	}
 
 
@@ -23,10 +24,24 @@ class BaseController extends CI_Controller {
 				unset($project['project']['company_id']);
 				$sidebar['projects'][] = $project['project'];
 			}
-			$this->load->view("partials/header", ["title" => $title]);
-			$this->load->view("partials/sidebar", $sidebar);
+
+			//var_dump($this->session->project); die;
+
+			//$data["current_project"] = $this->session->project['name'];
+			//$data["current_folder"] = $this->session->project['id'];
+			//print_r($this->folder->with('file')->get_by('id', 'PRJiI8OdOQC'));
+			// print_r($this->folder->with('file')->get_all());
+			// $folders = $this->Files_Model->get_folders($this->session->project['id']);
+			// $content = $this->Files_Model->get_contents($this->session->project['id']);
+
+			// $data['folders'] = $folders;
+			// $data['current_dir_contents'] = $content;
+
+			$this->load->helper('form');
+			$this->load->view("partial/header", ["title" => $title]);
+			$this->load->view("partial/sidebar", $sidebar);
 			$this->load->view($view, $data ?? null);
-			$this->load->view("partials/footer");
+			$this->load->view("partial/footer");
 		} else {
 			redirect(LOGIN_URL);
 		}

@@ -1,5 +1,6 @@
 .DS_Store
 
+assets/uploads/*
 application/cache/*
 !application/cache/index.html
 !application/cache/.htaccess
@@ -27,3 +28,8 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.stTheme.cache
 *.sublime-workspace
 *.sublime-project
+*.editorconfig
+
+# Upload Folder Contents
+#---------------------------
+assets/uploads/*
