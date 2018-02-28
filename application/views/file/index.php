@@ -61,7 +61,32 @@
                                     <div class="progress m-3" id='progress' hidden>
                                         <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                                     </div>
-                                    <input type="file" class="w-100" id="new_file" name="new_file">
+                                    <input type="file" class="w-100" id="new_file" name="new_file" accept=".txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.zip,.rar,.jpg,.gif,.png">
+                                    <div class="mx-3" style="display:block" id="instructions">
+                                        <hr/>
+                                        <small>
+                                            <ul class="list-unstyled">
+                                                <li>File must not exceed <span class="text-danger">120 MB</span></li>
+                                                <li>Allowed file types:
+                                                    <ul class="list-inline mx-4 text-danger">
+                                                        <li class="list-inline-item">.txt</li>
+                                                        <li class="list-inline-item">.doc</li>
+                                                        <li class="list-inline-item">.docx</li>
+                                                        <li class="list-inline-item">.xls</li>
+                                                        <li class="list-inline-item">.xlsx</li>
+                                                        <li class="list-inline-item">.ppt</li>
+                                                        <li class="list-inline-item">.pptx</li>
+                                                        <li class="list-inline-item">.pdf</li>
+                                                        <li class="list-inline-item">.jpg</li>
+                                                        <li class="list-inline-item">.gif</li>
+                                                        <li class="list-inline-item">.png</li>
+                                                        <li class="list-inline-item">.zip</li>
+                                                        <li class="list-inline-item">.rar</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </small>
+                                    </div>
                                     <div id="upload_status" class="text-center" hidden></div>
                                 </div>
                             </div>

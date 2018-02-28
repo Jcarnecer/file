@@ -13,9 +13,10 @@ $(document).ready(function () {
     var progress = $('div#progress');
     var progressBar = $('#progressBar');
     var upload_modal_trigger = $('button#upload_modal_trigger');
+    var instructions_div = $('div#instructions');
 
     var fileID = "";
-    var errorHTML = '<h4 class="text-danger font-weight-bold">Error!</h4>';
+    var errorHTML = '<h4 class="text-danger font-weight-bold">Oops!</h4>';
     var xhr = new window.XMLHttpRequest();
 
     // refresh files on load
@@ -161,6 +162,11 @@ $(document).ready(function () {
     );
 
     function resetUploadButtons() {
+        instructions_div.css({
+            "height":"auto",
+            "opacity": "1"
+            }
+        );
         file_input.val(null);
 
         // status texts
@@ -189,12 +195,8 @@ $(document).ready(function () {
 
         // file input
         file_input.removeAttr('hidden');
-
-        // close button
         close_button.removeAttr('hidden');
-
         retry_button.attr('hidden', 'true');
-
         submit_button.attr('disabled', 'true');
     }
 
@@ -220,18 +222,20 @@ $(document).ready(function () {
     newFileForm.submit(
         function (e) {
             e.preventDefault();
-
+            instructions_div.animate(
+                {
+                    height: '0px',
+                    opacity: '0'
+                },
+                500
+            );
             // Show progress bar and change button context
             submit_button.attr('hidden', 'true');
-
             progress.removeAttr('hidden');
-
             file_input.attr('hidden', 'true');
-
             close_button.attr('hidden', 'true');
-
             cancel_button.removeAttr('hidden', 'true')
-
+         
             $.ajax({
                 xhr: function () { // loader logic
                     xhr.upload.addEventListener('progress', function (e) {
@@ -271,9 +275,9 @@ $(document).ready(function () {
                     close_button.removeAttr('hidden');
 
                     retry_button
-                        .text('Upload another')
+                        .text('Upload another file')
                         .removeClass('btn-warning')
-                        .addClass('')
+                        .addClass('btn-secondary')
                         .removeAttr('hidden');
 
                     upload_status.removeAttr('hidden')
@@ -290,7 +294,6 @@ $(document).ready(function () {
                         retry_button
                             .text('Upload another')
                             .removeClass('btn-warning')
-                            .addClass('')
                             .removeAttr('hidden');
 
                         return;
