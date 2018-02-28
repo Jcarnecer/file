@@ -98,7 +98,7 @@ class FileController extends BaseController
         $config['file_name'] = $gen_file_name;
         $config['upload_path'] = './assets/uploads/';
         $config['allowed_types'] = 'txt|doc|docx|xls|xlsx|ppt|pptx|pdf|zip|rar|jpg|gif|png';
-        $config['max_size'] = 120000; //120MB Max upload Size
+        $config['max_size'] = 5000; //120MB Max upload Size
         $config['max_filename'] = 255;
         $config['max_filename_increment'] = 999;
         //$config['encrypt_name'] = TRUE;
@@ -117,18 +117,19 @@ class FileController extends BaseController
 
         } else {
             $new_file_data = array(
-                'id' => $gen_file_name,
-                'name' => $this->upload->data('client_name'),
+                'id'         => $gen_file_name,
+                'name'       => $this->upload->data('client_name'),
                 //'type' => $this->upload->data('file_ext'),
-                'location' => $this->session->project['id'],
+                'location'   => $this->session->project['id'],
                 //'company_id' => $this->session->project['company_id'],
                 //'project_id' => $this->session->project['id'],
+                'size'       => $this->upload->data('file_size'),
                 'created_by' => $this->session->user->id,
                 'updated_by' => $this->session->user->id,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s"),
-                'deleted' => 0,
-                'source' => "assets/uploads/" . $this->upload->data('file_name'),
+                'deleted'    => 0,
+                'source'     => "assets/uploads/" . $this->upload->data('file_name'),
             );
 
             $status_msg = array('success' => 'Upload Success');

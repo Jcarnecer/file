@@ -74,6 +74,10 @@ $(document).ready(function () {
         // build string to return
         var str = "";
 
+        // get name of who create/modified the file
+        var user = getUser(row.updated_by).responseJSON;
+        var modifier_name = user.first_name + " " + user.last_name;
+
         // build tr opening and closing tags
         var trOpeningTag_str = "<tr id='file[" + row.id + "]'>";
         var trClosingTag_str = "</tr>";
@@ -103,14 +107,24 @@ $(document).ready(function () {
             "</p>" +
             tdClosingTag_str;
 
+        var fileCreated_str = // date created
+            tdOpeningTag_str +
+            "<p class='text-secondary'>" + row.created_at + "</p>" +
+            tdClosingTag_str;
+
         var fileModified_str = // last modified
             tdOpeningTag_str +
             "<p class='text-secondary'>" + row.updated_at + "</p>" +
             tdClosingTag_str;
 
-        var fileCreated_str = // date created
+        var fileModifiedBy_str = // last modified
             tdOpeningTag_str +
-            "<p class='text-secondary'>" + row.created_at + "</p>" +
+            "<p class='text-secondary'>" + modifier_name + "</p>" +
+            tdClosingTag_str;
+
+        var fileSize_str = // last modified
+            tdOpeningTag_str +
+            "<p class='text-secondary'>" + row.size + " KB</p>" +
             tdClosingTag_str;
 
         var fileDownloadLink_str = // download button
@@ -140,8 +154,10 @@ $(document).ready(function () {
         str =
             trOpeningTag_str +
             fileName_str +
-            fileModified_str +
             fileCreated_str +
+            fileModified_str +
+            fileModifiedBy_str +
+            fileSize_str +
             lastcolumn +
             trClosingTag_str;
 

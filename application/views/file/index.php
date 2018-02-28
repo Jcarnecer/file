@@ -66,7 +66,7 @@
                                         <hr/>
                                         <small>
                                             <ul class="list-unstyled">
-                                                <li>File must not exceed <span class="text-danger">120 MB</span></li>
+                                                <li>File must not exceed <span class="text-danger">5 MB</span></li>
                                                 <li>Allowed file types:
                                                     <ul class="list-inline mx-4 text-danger">
                                                         <li class="list-inline-item">.txt</li>
@@ -106,9 +106,11 @@
                 <table class="table table-hover" >
                     <thead class="text-secondary">
                         <th class=""><span class="ml-2">Name</span></th>
-                        <th class="" style="width:15%;">Last Modified</td>
                         <th class="" style="width:15%;">Date Created</th>
-                        <th class=""></th>
+                        <th class="" style="width:15%;">Last Modified</th>
+                        <th class="" style="width:15%;">Modified By</th>
+                        <th class="" style="width:15%;">Size</th>
+                        <th class="" style="width:15%;"></th>
                     </thead>
                     <tbody id="file_browser" >
                         <!-- AJAX FILES HERE -->
