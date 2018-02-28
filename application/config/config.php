@@ -411,8 +411,12 @@ $config['sess_regenerate_destroy'] = FALSE;
 |       'cookie_httponly') will also affect sessions.
 |
 */
+if (ENVIRONMENT === 'development') {
+	$config['cookie_domain'] = ''; 
+} else {
+	$config['cookie_domain'] = '.payakapps.com';
+}
 $config['cookie_prefix']	= '';
-$config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= FALSE;
