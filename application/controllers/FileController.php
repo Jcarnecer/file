@@ -17,8 +17,6 @@ class FileController extends BaseController
         $project = $this->project->get($id);
         $this->session->set_userdata(['project' => $project]);
 
-        //var_dump($data['dirs']); die;
-
         // creates new root folder of project if there is none
         $folder = $this->folder->get($id);
         if (!isset($folder)) {
@@ -110,10 +108,12 @@ class FileController extends BaseController
 
         $this->upload->initialize($config);
 
+        $status_msg = ''; 
+
         if (!$this->upload->do_upload('new_file')) {
-            $error = array('error' => $this->upload->display_errors());
-            
-            print_r($error);
+            //print_r($this->upload->data['file_size']);
+            $status_msg = array('error' => $this->upload->display_errors());
+            echo json_encode($status_msg);
 
         } else {
             $new_file_data = array(
@@ -131,12 +131,13 @@ class FileController extends BaseController
                 'source' => "assets/uploads/" . $this->upload->data('file_name'),
             );
 
-            // var_dump($new_file_data); die;
+            $status_msg = array('error' => 'Database Connection Error')
 
             if ($this->file->insert($new_file_data)) {
-                echo "ERROR IN INSERTING";die;
-                
+                $status_msg = array('error' => 'Database Connection Error');
             }
+
+            echo json_encode($status_msg);
         }
     }
 

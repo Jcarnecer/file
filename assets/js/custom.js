@@ -8,12 +8,13 @@ $(document).ready(function () {
     var submit_button = (newFileForm).find('button#upload');
     var close_button = (newFileForm).find('button#close_upload');
     var file_input = (newFileForm).find('input#new_file');
-    var upload_status = newFileForm.find('p#upload_status');
+    var upload_status = newFileForm.find('div#upload_status');
     var progress = $('div#progress');
     var progressBar = $('#progressBar');
     var upload_modal_trigger = $('button#upload_modal_trigger');
-
+    
     var fileID = "";
+    var errorHTML = '<h4 class="text-danger font-weight-bold">Error!</h4>';
 
     // refresh files on load
     refresh();
@@ -89,7 +90,7 @@ $(document).ready(function () {
         // content html of each td
 
         // build file icon
-        var fileIcon_str = "<span class='fas fa-file fa-2x mr-5'></span>";
+        var fileIcon_str = "<span class='fas fa-file fa-2x mx-5'></span>";
 
         var fileName_str = // file name
             tdOpeningTag_str +
@@ -153,6 +154,10 @@ $(document).ready(function () {
     // reset buttons to default states
     upload_modal_trigger.click(function () {
 
+        if (!upload_status.is(':empty')){
+            upload_status.empty();
+        }
+
         // cancel button
         if (cancel_button.hasClass('btn-primary')) {
             cancel_button.removeClass('btn-primary');
@@ -173,6 +178,14 @@ $(document).ready(function () {
         submit_button.addClass('btn-primary')
             .removeAttr('disabled')
             .text('Upload');
+
+        if (progressBar.hasClass('bg-danger')) {
+            progressBar.removeClass('bg-danger');
+        }
+        if (progressBar.hasClass('bg-success')) {
+            progressBar.removeClass('bg-success');
+        }
+        progressBar.css('width','0%');
 
         // file input
         file_input.removeAttr('hidden');
@@ -205,15 +218,16 @@ $(document).ready(function () {
 
             close_button.attr('hidden', 'true');
 
+            var xhr = new window.XMLHttpRequest();
+
             $.ajax({
                 xhr: function () { // loader logic
-                    var xhr = new window.XMLHttpRequest();
-
                     xhr.upload.addEventListener('progress', function (e) {
                         if (e.lengthComputable) {
-                            var percent = Math.round((e.loaded / e.total)) * 100;
-                            console.log(percent);
+                            var percent = Math.round((e.loaded / e.total) * 100);
+                            //console.log(percent);
                             progressBar.attr('aria-valuenow', percent).css('width', percent + '%');
+                            console.log(percent);
                         }
                     });
 
@@ -222,6 +236,7 @@ $(document).ready(function () {
                 url: 'add_file',
                 type: 'POST',
                 data: new FormData(this),
+                dataType: 'json',
                 contentType: false,
                 cache: false,
                 processData: false,
@@ -230,6 +245,17 @@ $(document).ready(function () {
             ).done(
                 function (data) {
                     refresh();
+
+                    if (file_input[0].files[0].size === 0) {
+                        uploadErrorBtnState('Your file does not contain anything!');
+                        return;
+                    }
+
+                    if (data.error != null) {
+                        uploadErrorBtnState(data.error);
+                        return;
+                    }
+
                     cancel_button.removeClass('btn-danger')
                         .addClass('btn-primary')
                         .text('Close');
@@ -247,25 +273,41 @@ $(document).ready(function () {
                     progressBar.addClass('bg-success');
                 }
             ).fail(
-                function (data) {
-                    cancel_button.removeClass('btn-danger')
-                        .addClass('btn-primary')
-                        .text('Cancel');
-
-                    submit_button.removeClass('btn-primary')
-                        .addClass('btn-warning')
-                        .attr('disabled', 'true')
-                        .text('Error');
-
-                    file_input.attr('hidden', 'true');
-
-                    close_button.attr('hidden', 'true');
-
-                    progressBar.addClass('bg-danger');
+                function (xhr, status, error) {
+                    if (file_input[0].files[0].size >= 120000000) {
+                        uploadErrorBtnState('Your file exceeds maximum size allowed!');
+                        return;
+                    }  
+                    console.log(xhr);
+                    console.log(status);
+                    console.log(error);
+                    errorText = 'Could not connect to the server.';
+                    uploadErrorBtnState(errorText);
                 }
             );
         }
     );
+
+    function uploadErrorBtnState(error) {
+        upload_status.removeAttr('hidden')
+            .append(errorHTML)
+            .append(error);
+
+        cancel_button.removeClass('btn-danger')
+            .addClass('btn-primary')
+            .text('Cancel');
+
+        submit_button.removeClass('btn-primary')
+            .addClass('btn-warning')
+            .attr('disabled', 'true')
+            .text('Error');
+
+        file_input.attr('hidden', 'true');
+
+        close_button.attr('hidden', 'true');
+
+        progressBar.addClass('bg-danger');
+    }
 
 
     // ------------------------------------- //
@@ -280,7 +322,7 @@ $(document).ready(function () {
             function (event) {
                 var rowFileID = $(event.relatedTarget).data('fileid'); // Extract info button's from data-* attributes
                 var modal = $(this);
-                
+
                 fileID = rowFileID;
 
                 console.log('modal show fileIDs: ' + fileID);
@@ -304,7 +346,7 @@ $(document).ready(function () {
                 }
             ).fail(
                 function (data) {
-                    console.log (data + " error");
+                    console.log(data + " error");
                 }
             );
 

@@ -61,7 +61,7 @@
                                     <div class="progress m-3" id='progress' hidden>
                                         <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                                     </div>
-                                    <p id="upload_status" class="text-center" hidden></p>
+                                    <div id="upload_status" class="text-center" hidden></div>
                                     <input type="file" class="w-100" id="new_file" name="new_file">
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
             <div class="p-0" style="flex:1;" >
                 <table class="table table-hover" >
                     <thead class="text-secondary">
-                        <th class=""><span class="table-row-first">Name</span></th>
+                        <th class=""><span class="ml-2">Name</span></th>
                         <th class="" style="width:15%;">Last Modified</td>
                         <th class="" style="width:15%;">Date Created</th>
                         <th class=""></th>
