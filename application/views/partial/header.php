@@ -20,6 +20,7 @@
 		<script src="assets/js/bootstrap.min.js"></script>
 		<script src="assets/js/fontawesome-all.min.js"></script>
 		<script src="assets/js/jquery.nicescroll.min.js"></script>
+		<script src="assets/js/api.js"></script>
 		<script src="assets/js/script.js"></script>
 
         <!-- Custom js	-->

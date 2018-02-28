@@ -117,18 +117,19 @@ class FileController extends BaseController
 
         } else {
             $new_file_data = array(
-                'id' => $gen_file_name,
-                'name' => $this->upload->data('client_name'),
+                'id'         => $gen_file_name,
+                'name'       => $this->upload->data('client_name'),
                 //'type' => $this->upload->data('file_ext'),
-                'location' => $this->session->project['id'],
+                'location'   => $this->session->project['id'],
                 //'company_id' => $this->session->project['company_id'],
                 //'project_id' => $this->session->project['id'],
+                'size'       => $this->upload->data('file_size'),
                 'created_by' => $this->session->user->id,
                 'updated_by' => $this->session->user->id,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s"),
-                'deleted' => 0,
-                'source' => "assets/uploads/" . $this->upload->data('file_name'),
+                'deleted'    => 0,
+                'source'     => "assets/uploads/" . $this->upload->data('file_name'),
             );
 
             // var_dump($new_file_data); die;
