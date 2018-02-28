@@ -10,6 +10,9 @@ $route['add_file'] = "FileController/add_file";
 $route['delete_file/(:any)'] = "FileController/delete_file/$1";
 
 # api
+$route['api/user/(:any)'] = "UserController/get/$1";
 # $route['api/get_contents'] = 'FileController/show_all_contents';
+
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

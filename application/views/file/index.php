@@ -79,9 +79,11 @@
                 <table class="table table-hover" >
                     <thead class="text-secondary">
                         <th class=""><span class="table-row-first">Name</span></th>
-                        <th class="" style="width:15%;">Last Modified</td>
                         <th class="" style="width:15%;">Date Created</th>
-                        <th class=""></th>
+                        <th class="" style="width:15%;">Last Modified</th>
+                        <th class="" style="width:15%;">Modified By</th>
+                        <th class="" style="width:15%;">Size</th>
+                        <th class="" style="width:15%;"></th>
                     </thead>
                     <tbody id="file_browser" >
                         <!-- AJAX FILES HERE -->
