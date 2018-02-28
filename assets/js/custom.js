@@ -6,15 +6,17 @@ $(document).ready(function () {
     var newFileForm = $('#new_file_form');
     var cancel_button = (newFileForm).find('button#cancel_upload');
     var submit_button = (newFileForm).find('button#upload');
+    var retry_button = (newFileForm).find('button#retry_upload');
     var close_button = (newFileForm).find('button#close_upload');
     var file_input = (newFileForm).find('input#new_file');
     var upload_status = newFileForm.find('div#upload_status');
     var progress = $('div#progress');
     var progressBar = $('#progressBar');
     var upload_modal_trigger = $('button#upload_modal_trigger');
-    
+
     var fileID = "";
     var errorHTML = '<h4 class="text-danger font-weight-bold">Error!</h4>';
+    var xhr = new window.XMLHttpRequest();
 
     // refresh files on load
     refresh();
@@ -152,40 +154,38 @@ $(document).ready(function () {
     // ------------------------------------- //
 
     // reset buttons to default states
-    upload_modal_trigger.click(function () {
+    upload_modal_trigger.click(
+        function (e) {
+            resetUploadButtons();
+        }
+    );
 
-        if (!upload_status.is(':empty')){
+    function resetUploadButtons() {
+        file_input.val(null);
+
+        // status texts
+        if (!upload_status.is(':empty')) {
             upload_status.empty();
         }
+        upload_status.attr('hidden', 'true');
 
         // cancel button
         if (cancel_button.hasClass('btn-primary')) {
             cancel_button.removeClass('btn-primary');
         }
-        if (cancel_button.hasClass('btn-danger')) {
-            cancel_button.removeClass('btn-danger');
-        }
-        cancel_button.addClass('btn-secondary');
-        cancel_button.text('Close');
 
         // submit button
-        if (submit_button.hasClass('btn-success')) {
-            submit_button.removeClass('btn-success');
-        }
-        if (submit_button.hasClass('btn-warning')) {
-            submit_button.removeClass('btn-warning');
-        }
-        submit_button.addClass('btn-primary')
-            .removeAttr('disabled')
-            .text('Upload');
+        submit_button.removeAttr('hidden');
 
+        // progress bar
         if (progressBar.hasClass('bg-danger')) {
             progressBar.removeClass('bg-danger');
         }
         if (progressBar.hasClass('bg-success')) {
             progressBar.removeClass('bg-success');
         }
-        progressBar.css('width','0%');
+        progressBar.css('width', '0%');
+        progress.attr('hidden', 'true');
 
         // file input
         file_input.removeAttr('hidden');
@@ -193,24 +193,36 @@ $(document).ready(function () {
         // close button
         close_button.removeAttr('hidden');
 
-        // progress bar
-        progress.attr('hidden', 'true');
-        upload_status.attr('hidden', 'true');
-    });
+        retry_button.attr('hidden', 'true');
+
+        submit_button.attr('disabled', 'true');
+    }
+
+    retry_button.click(
+        function () {
+            resetUploadButtons();
+        }
+    );
+
+    // make sure a file is selected
+    file_input.change(
+        function (e) {
+            upload_status.empty().attr('hidden', 'true');
+            if ($(this).val && $(this)[0].files[0].size < 120000000) {
+                submit_button.removeAttr('disabled');
+            } else {
+                upload_status.append('<p class="text-danger"><small>That file is too large</small></p>')
+                    .removeAttr('hidden');
+            }
+        }
+    );
 
     newFileForm.submit(
         function (e) {
             e.preventDefault();
 
             // Show progress bar and change button context
-            cancel_button.removeClass('btn-secondary')
-                .addClass('btn-danger')
-                .text('Cancel');
-
-            submit_button.removeClass('btn-primary')
-                .addClass('btn-warning')
-                .attr('disabled', 'true')
-                .text('Uploading...');
+            submit_button.attr('hidden', 'true');
 
             progress.removeAttr('hidden');
 
@@ -218,16 +230,14 @@ $(document).ready(function () {
 
             close_button.attr('hidden', 'true');
 
-            var xhr = new window.XMLHttpRequest();
+            cancel_button.removeAttr('hidden', 'true')
 
             $.ajax({
                 xhr: function () { // loader logic
                     xhr.upload.addEventListener('progress', function (e) {
                         if (e.lengthComputable) {
                             var percent = Math.round((e.loaded / e.total) * 100);
-                            //console.log(percent);
                             progressBar.attr('aria-valuenow', percent).css('width', percent + '%');
-                            console.log(percent);
                         }
                     });
 
@@ -256,31 +266,41 @@ $(document).ready(function () {
                         return;
                     }
 
-                    cancel_button.removeClass('btn-danger')
-                        .addClass('btn-primary')
-                        .text('Close');
-
-                    submit_button.removeClass('btn-warning')
-                        .addClass('btn-success')
-                        .attr('disabled', 'true')
-                        .text('Upload Complete!');
+                    cancel_button.attr('hidden', 'true');
 
                     close_button.removeAttr('hidden');
 
+                    retry_button
+                        .text('Upload another')
+                        .removeClass('btn-warning')
+                        .addClass('')
+                        .removeAttr('hidden');
+
                     upload_status.removeAttr('hidden')
-                        .text('Your file has been uploaded!');
+                        .append('Your file has been uploaded!');
 
                     progressBar.addClass('bg-success');
                 }
             ).fail(
                 function (xhr, status, error) {
+                    refresh();
+
+                    if (xhr.readyState === 0) {
+                        uploadErrorBtnState('Upload has been interrupted');
+                        retry_button
+                            .text('Upload another')
+                            .removeClass('btn-warning')
+                            .addClass('')
+                            .removeAttr('hidden');
+
+                        return;
+                    }
+
                     if (file_input[0].files[0].size >= 120000000) {
                         uploadErrorBtnState('Your file exceeds maximum size allowed!');
                         return;
-                    }  
-                    console.log(xhr);
-                    console.log(status);
-                    console.log(error);
+                    }
+
                     errorText = 'Could not connect to the server.';
                     uploadErrorBtnState(errorText);
                 }
@@ -290,25 +310,27 @@ $(document).ready(function () {
 
     function uploadErrorBtnState(error) {
         upload_status.removeAttr('hidden')
+            .empty()
             .append(errorHTML)
             .append(error);
 
-        cancel_button.removeClass('btn-danger')
-            .addClass('btn-primary')
-            .text('Cancel');
+        close_button.removeAttr('hidden');
 
-        submit_button.removeClass('btn-primary')
-            .addClass('btn-warning')
-            .attr('disabled', 'true')
-            .text('Error');
+        retry_button.removeAttr('hidden');
+
+        cancel_button.attr('hidden', 'true');
 
         file_input.attr('hidden', 'true');
-
-        close_button.attr('hidden', 'true');
 
         progressBar.addClass('bg-danger');
     }
 
+    // cancel button
+    cancel_button.click(
+        function () {
+            xhr.abort();
+        }
+    );
 
     // ------------------------------------- //
     // MODALS
@@ -316,18 +338,17 @@ $(document).ready(function () {
     // ------------------------------------- //
 
     // dynamically generate delete modal contents
-    $('#delete_modal')
-        .on(
-            'show.bs.modal',
-            function (event) {
-                var rowFileID = $(event.relatedTarget).data('fileid'); // Extract info button's from data-* attributes
-                var modal = $(this);
+    $('#delete_modal').on(
+        'show.bs.modal',
+        function (event) {
+            var rowFileID = $(event.relatedTarget).data('fileid'); // Extract info button's from data-* attributes
+            var modal = $(this);
 
-                fileID = rowFileID;
+            fileID = rowFileID;
 
-                console.log('modal show fileIDs: ' + fileID);
-            }
-        );
+            console.log('modal show fileIDs: ' + fileID);
+        }
+    );
 
     $('#deleteFile_btn').click(
         function (e) {
@@ -352,6 +373,5 @@ $(document).ready(function () {
 
             $('#delete_modal').modal('hide');
         }
-    )
-
+    );
 });

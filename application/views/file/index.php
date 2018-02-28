@@ -61,13 +61,15 @@
                                     <div class="progress m-3" id='progress' hidden>
                                         <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                                     </div>
-                                    <div id="upload_status" class="text-center" hidden></div>
                                     <input type="file" class="w-100" id="new_file" name="new_file">
+                                    <div id="upload_status" class="text-center" hidden></div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button id='cancel_upload' type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button id='upload' type="submit" class="btn btn-primary" value="submit">Upload</button>
+                                <!-- <button id='cancel_upload' type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                                <button id='cancel_upload' type="button" class="btn btn-danger" hidden>Cancel</button>
+                                <button id='retry_upload' type="button" class="btn btn-warning" hidden>Retry</button>
+                                <button id='upload' type="submit" class="btn btn-primary" value="submit" disabled>Upload</button>
                             </div>
                             <?=form_close();?>
                         </div>
@@ -120,8 +122,8 @@
                                 <p class="">Are you sure you want to <span class="text-danger">delete</span> this file?</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
-                                <button id="deleteFile_btn" data-fileid="" class="btn btn-danger">Yes, I want to delete this file</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                                <button id="deleteFile_btn" data-fileid="" class="btn btn-secondary">Yes, I want to delete this file</button>
                             </div>
                         </div>
                     </div>

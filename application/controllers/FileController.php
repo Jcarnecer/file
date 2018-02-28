@@ -48,11 +48,11 @@ class FileController extends BaseController
             ->get_by([
                 'id' => $id,
                 'root' => true,
-			]);
-		
-		//print_r($data);
-		
-		echo json_encode($data);
+            ]);
+
+        //print_r($data);
+
+        echo json_encode($data);
     }
 
     /*
@@ -88,7 +88,7 @@ class FileController extends BaseController
 
     //echo json_encode($result);
     }
-    */
+     */
 
     public function add_file()
     {
@@ -97,7 +97,7 @@ class FileController extends BaseController
 
         $config['file_name'] = $gen_file_name;
         $config['upload_path'] = './assets/uploads/';
-        $config['allowed_types'] = 'txt|doc|docx|xls|xlsx|ppt|pptx|zip|rar|jpg|gif|png';
+        $config['allowed_types'] = 'txt|doc|docx|xls|xlsx|ppt|pptx|pdf|zip|rar|jpg|gif|png';
         $config['max_size'] = 120000; //120MB Max upload Size
         $config['max_filename'] = 255;
         $config['max_filename_increment'] = 999;
@@ -108,7 +108,7 @@ class FileController extends BaseController
 
         $this->upload->initialize($config);
 
-        $status_msg = ''; 
+        $status_msg = '';
 
         if (!$this->upload->do_upload('new_file')) {
             //print_r($this->upload->data['file_size']);
@@ -131,7 +131,7 @@ class FileController extends BaseController
                 'source' => "assets/uploads/" . $this->upload->data('file_name'),
             );
 
-            $status_msg = array('error' => 'Database Connection Error')
+            $status_msg = array('success' => 'Upload Success');
 
             if ($this->file->insert($new_file_data)) {
                 $status_msg = array('error' => 'Database Connection Error');
@@ -143,28 +143,32 @@ class FileController extends BaseController
 
     public function delete_file($id)
     {
-        $this->file->delete($id);   
+        if ($this->file->delete($id)){
+            $status_msg = array('success' => 'Delete Success');
+        } else {
+            $status_msg = array('error' => 'Database connection error.');
+        }
     }
 
     /* ************** These are functions to be used when creating new folders.. to be updated ***************** @author JM
-    public function create_folder($id) {
-        $data = [
-            'id' => //generate id,
-            'name'=> $this->input->post('name'),
-            'location' => $id,
-            'root' => FALSE
-        ];
+public function create_folder($id) {
+$data = [
+'id' => //generate id,
+'name'=> $this->input->post('name'),
+'location' => $id,
+'root' => FALSE
+];
 
-        return $this->folder->insert($data);
-    }
+return $this->folder->insert($data);
+}
 
-    public function update_folder($id) {
-        $data = [
-            'name' => $this->input->post('name'),
-            'location' => $id
-        ];
+public function update_folder($id) {
+$data = [
+'name' => $this->input->post('name'),
+'location' => $id
+];
 
-        return $this->folder->update($data)
-    }
-    */
+return $this->folder->update($data)
+}
+ */
 }

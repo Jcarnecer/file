@@ -31,4 +31,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 # Upload Folder Contents
 #---------------------------
-uploads/*
+assets/uploads/*
