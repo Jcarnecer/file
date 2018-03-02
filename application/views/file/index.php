@@ -66,9 +66,9 @@
                                         <hr/>
                                         <small>
                                             <ul class="list-unstyled">
-                                                <li>File must not exceed <span class="text-danger">5 MB</span></li>
+                                                <li>File must not exceed <span class="text-info">5 MB</span></li>
                                                 <li>Allowed file types:
-                                                    <ul class="list-inline mx-4 text-danger">
+                                                    <ul class="list-inline mx-4 text-info">
                                                         <li class="list-inline-item">.txt</li>
                                                         <li class="list-inline-item">.doc</li>
                                                         <li class="list-inline-item">.docx</li>
