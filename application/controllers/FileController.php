@@ -121,7 +121,7 @@ class FileController extends BaseController
                 'name'       => $this->upload->data('client_name'),
                 //'type' => $this->upload->data('file_ext'),
                 'location'   => $this->session->project['id'],
-                //'company_id' => $this->session->project['company_id'],
+                'company_id' => $this->session->project['company_id'],
                 //'project_id' => $this->session->project['id'],
                 'size'       => $this->upload->data('file_size'),
                 'created_by' => $this->session->user->id,
