@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 $route["default_controller"] = "SiteController/index";
 
@@ -11,8 +11,7 @@ $route['delete_file/(:any)'] = "FileController/delete_file/$1";
 
 # api
 $route['api/user/(:any)'] = "UserController/get/$1";
-# $route['api/get_contents'] = 'FileController/show_all_contents';
-
+$route['api/icon/(:any)'] = "FileController/getIconClass/$1";
 
 $route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+$route['translate_uri_dashes'] = false;

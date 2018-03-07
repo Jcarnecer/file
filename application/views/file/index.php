@@ -1,50 +1,13 @@
 <div class="container-fluid h-100" >
     <div class="row h-100">
 
-        <!-- FILE TREE -->
-        <!-- <section class="col-md-2 h-100 gen-dir p-0 border-right border-light">
-            <div class="h-100 p-3 text-truncate" style="overflow:scroll;">
-                <div class="text-truncate"><i class="fas fa-folder-open"></i>&nbsp;<?=$current_directory['name']?></div>
-                <?php //foreach ($folders as $key => $value): ?>
-                <div class="pl-4 text-truncate"><i class="fas fa-folder"></i>&nbsp;<?=$value['name']?></div>
-                <?php //endforeach; ?>
-            </div>
-        </section> -->
-
         <!-- FILE BROWSER -->
         <section class="col-md h-100 p-0" style="display: flex; flex-direction: column;">
             <div class="bg-light w-100 py-3 px-5 clearfix" style="">
                 <nav class="text-secondary float-left" style="font-size:1.5rem;"><?=$current_directory['name']?></nav>
                 <div class="float-right">
                     <button id="upload_modal_trigger" class="btn btn-primary" data-toggle="modal" data-target="#new_file_modal"><i class="fas fa-upload"></i>&nbsp;Upload File</button>
-
-                    <!-- <button class="btn btn-info" data-toggle="modal" data-target="#new_dir_modal"><i class="fas fa-plus"></i>&nbsp;Add Folder</button> -->
                 </div>
-
-                <!-- <div class="modal fade" id="new_dir_modal" tabindex="-1" role="dialog" aria-labelledby="new_dir_modal" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <?=form_open('FileController/make_new_folder', 'id="new_folder_form", name="new_folder_form"');?>
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modal-title">Create New Folder</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-
-                            <input type="text" class="form-control" id="new_folder_name" name="new_folder_name" aria-describedby="newfolder" placeholder="Enter Folder Name" required>
-                            <small id="folderHelp" class="form-text text-muted text-italic"><b>Avoid Spaces.</b> <i>Use hypens instead.</i>&nbsp;&nbsp;eg. new-project-instructions</small>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" value="submit">Save changes</button>
-                        </div>
-                        </div>
-                        <?=form_close();?>
-                    </div>
-                </div> -->
 
                 <div class="modal fade" id="new_file_modal" tabindex="-1" role="dialog" aria-labelledby="new_file_modal" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -91,7 +54,6 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <!-- <button id='cancel_upload' type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                                 <button id='cancel_upload' type="button" class="btn btn-danger" hidden>Cancel</button>
                                 <button id='retry_upload' type="button" class="btn btn-warning" hidden>Retry</button>
                                 <button id='upload' type="submit" class="btn btn-primary" value="submit" disabled>Upload</button>
@@ -102,18 +64,20 @@
                 </div>
             </div>
 
-            <div class="p-0" style="flex:1;" >
-                <table class="table table-hover" >
+            <div class="pt-4 ">
+                <table class="table table-hover w-100" id="fileDataTable">
                     <thead class="text-secondary">
-                        <th class=""><span class="ml-2">Name</span></th>
-                        <th class="" style="width:15%;">Date Created</th>
-                        <th class="" style="width:15%;">Last Modified</th>
-                        <th class="" style="width:15%;">Modified By</th>
-                        <th class="" style="width:15%;">Size</th>
-                        <th class="" style="width:15%;"></th>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Date Created</th>
+                            <th>Last Modified</th>
+                            <th>Modified By</th>
+                            <th>Size</th>
+                            <th></th>
+                        </tr>
                     </thead>
-                    <tbody id="file_browser" >
-                        <!-- AJAX FILES HERE -->
+                    <tbody>
                     </tbody>
                 </table>
 
