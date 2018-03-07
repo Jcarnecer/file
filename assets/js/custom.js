@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-    // @TODO: create cancel upload function
     // @author: Zahaire Guro
 
     var newFileForm = $('#new_file_form');
@@ -20,155 +19,91 @@ $(document).ready(function () {
     var xhr = new window.XMLHttpRequest();
 
     // refresh files on load
-    refresh();
+    // refresh();
 
-    // ------------------------------------- //
-    // FILE RETRIEVE AJAX
-    // ------------------------------------- //
-    // ------------------------------------- //
+    // ------------------ //
+    // FILE RETRIEVE AJAX //
+    // ------------------ //
 
-    // function to refresh page
-    function refresh() {
-        $.ajax(
+    var fileDisplayTable = $('#fileDataTable')
+        .DataTable(
             {
-                method: 'GET',
-                async: true,
-                url: 'get_dir_contents',
-                datatype: 'json',
-                timeout: 300000
-            }
-        ).done(
-            function (data) {
-                data = JSON.parse(data);
-                var data = data.current_directory;
-
-                var str = "";
-                $.each(data.file, function (i, val) {
-                    str += generateRow(val);
-                });
-
-                $('#file_browser').empty();
-                $('#file_browser').append(str);
-            }
-        ).fail(
-            function (data) {
-                //console.log($('#error_modal'));
-                var modal = $('#error_modal');
-
-                var errorText =
-                    data.status +
-                    " " +
-                    data.statusText +
-                    "<br/>" +
-                    "Error in fetching the files";
-
-                modal.find('.modal-body p#error_code')[0].innerHTML = errorText;
-                console.log(data);
-                $('#error_modal').modal('show');
+                "ajax": {
+                    "dataType": "json",
+                    "url": "get_dir_contents",
+                    "type": "GET",
+                    "dataSrc": "current_directory.file",
+                    "select": "true"
+                },
+                "columnDefs": [
+                    {
+                        "className": "text-secondary",
+                        "targets": [2, 3, 4, 5]
+                    },
+                    {
+                        "className": "text-center",
+                        "targets": [0, 6]
+                    }
+                ],
+                "columns": [
+                    {
+                        "data": "name",
+                        "width": "5%",
+                        "orderable": false,
+                        "render": function (data, type, row, meta) {
+                            var fasClass = getIconClass(data.substring(data.lastIndexOf(".") + 1));
+                            return '<i class="fas fa-2x center-v h-100 ' + fasClass + '"></i>';
+                        }
+                    },
+                    {
+                        "data": "name",
+                        "width": "45%"
+                    },
+                    {
+                        "data": "created_at",
+                        "width": "10%"
+                    },
+                    {
+                        "data": "updated_at",
+                        "width": "10%"
+                    },
+                    {
+                        "data": "updated_by",
+                        "width": "12%",
+                        "render": function (data, type, row, meta) {
+                            var user = getUser(data);;
+                            return user.fullname;
+                        }
+                    },
+                    {
+                        "data": "size",
+                        "width": "10%",
+                        "render":
+                            function (data, type, row, meta) {
+                                return data + ' KB';
+                            }
+                    },
+                    {
+                        "data": null,
+                        "orderable": false,
+                        "render":
+                            function (data, type, row, meta) {
+                                downloadBtn_str = '<a href="' + row.source + '" download="' + row.name + '" class="btn btn-success m-1"><i class="fas fa-download"></i></a>';
+                                deleteBtn_str = '<button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#delete_modal" data-fileid="' + row.id + '"><i class="fas fa-trash"></i></button>';
+                                return downloadBtn_str + deleteBtn_str;
+                            }
+                    }
+                ],
+                "processing": true,
+                "paging": true,
+                "order": [[1, 'asc']],
+                "pageLength": 10
             }
         );
-    }
 
-    // table row string builder
-    function generateRow(row) {
-        // build string to return
-        var str = "";
-
-        // get name of who create/modified the file
-        var user = getUser(row.updated_by).responseJSON;
-        var modifier_name = user.first_name + " " + user.last_name;
-
-        // build tr opening and closing tags
-        var trOpeningTag_str = "<tr id='file[" + row.id + "]'>";
-        var trClosingTag_str = "</tr>";
-
-        // declare td css classes
-        var tdAdditionalClasses_CSS = "align-middle";
-        // declare td css styles
-        var tdAdditionalStyle_CSS = "";
-
-        // build td opening tag
-        var tdOpeningTag_str =
-            "<td class='" + tdAdditionalClasses_CSS +
-            "' style='" + tdAdditionalStyle_CSS + "'>";
-
-        var tdClosingTag_str = "</td>";
-
-        // content html of each td
-
-        // build file icon
-        var fileIcon_str = "<span class='fas fa-file fa-2x mx-5'></span>";
-
-        var fileName_str = // file name
-            tdOpeningTag_str +
-            "<p class='table-row-first'>" +
-            fileIcon_str + // file icon
-            row.name +
-            "</p>" +
-            tdClosingTag_str;
-
-        var fileCreated_str = // date created
-            tdOpeningTag_str +
-            "<p class='text-secondary'>" + row.created_at + "</p>" +
-            tdClosingTag_str;
-
-        var fileModified_str = // last modified
-            tdOpeningTag_str +
-            "<p class='text-secondary'>" + row.updated_at + "</p>" +
-            tdClosingTag_str;
-
-        var fileModifiedBy_str = // last modified
-            tdOpeningTag_str +
-            "<p class='text-secondary'>" + modifier_name + "</p>" +
-            tdClosingTag_str;
-
-        var fileSize_str = // last modified
-            tdOpeningTag_str +
-            "<p class='text-secondary'>" + row.size + " KB</p>" +
-            tdClosingTag_str;
-
-        var fileDownloadLink_str = // download button
-            "<a href='" + row.source +
-            "' download='" + row.name +
-            "' target='_blank' " +
-            "class='btn btn-success m-2'>" +
-            "<i class='fas fa-download fa-1x'></i>" +
-            "</a>";
-
-        var fileDeleteButton_str = // delete button
-            "<button type='button' " +
-            "data-toggle='modal' " +
-            "class='btn btn-danger m-2' " +
-            "data-target='#delete_modal' " + // what modal to target
-            "data-fileid='" + row.id + "'>" + // new data-* field to dynamically vary modal content
-            "<i class='fas fa-trash fa-1x'></i></button>"; // delete button icon
-
-        var lastcolumn =
-            tdOpeningTag_str +
-            "<div class='float-right mr-5'>" +
-            fileDownloadLink_str +
-            fileDeleteButton_str +
-            "</div>" +
-            tdClosingTag_str;
-
-        str =
-            trOpeningTag_str +
-            fileName_str +
-            fileCreated_str +
-            fileModified_str +
-            fileModifiedBy_str +
-            fileSize_str +
-            lastcolumn +
-            trClosingTag_str;
-
-        return str;
-    }
-
-
-    // ------------------------------------- //
-    // FILE UPLOAD AJAX
-    // ------------------------------------- //
-    // ------------------------------------- //
+    // ------------------ //
+    // FILE UPLOAD AJAX //
+    // ------------------ //
 
     // reset buttons to default states
     upload_modal_trigger.click(
@@ -179,9 +114,9 @@ $(document).ready(function () {
 
     function resetUploadButtons() {
         instructions_div.css({
-            "height":"auto",
+            "height": "auto",
             "opacity": "1"
-            }
+        }
         );
         file_input.val(null);
 
@@ -235,6 +170,7 @@ $(document).ready(function () {
         }
     );
 
+    // FILE UPLOAD
     newFileForm.submit(
         function (e) {
             e.preventDefault();
@@ -251,79 +187,81 @@ $(document).ready(function () {
             file_input.attr('hidden', 'true');
             close_button.attr('hidden', 'true');
             cancel_button.removeAttr('hidden', 'true')
-         
-            $.ajax({
-                xhr: function () { // loader logic
-                    xhr.upload.addEventListener('progress', function (e) {
-                        if (e.lengthComputable) {
-                            var percent = Math.round((e.loaded / e.total) * 100);
-                            progressBar.attr('aria-valuenow', percent).css('width', percent + '%');
+
+            $.ajax(
+                {
+                    xhr: function () { // loader logic
+                        xhr.upload.addEventListener('progress', function (e) {
+                            if (e.lengthComputable) {
+                                var percent = Math.round((e.loaded / e.total) * 100);
+                                progressBar.attr('aria-valuenow', percent).css('width', percent + '%');
+                            }
+                        });
+
+                        return xhr;
+                    },
+                    url: 'add_file',
+                    type: 'POST',
+                    data: new FormData(this),
+                    dataType: 'json',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    timeout: 3600000,
+                    async: true
+                })
+                .done(
+                    function (data) {
+                        if (file_input[0].files[0].size === 0) {
+                            uploadErrorBtnState('Your file does not contain anything!');
+                            return;
                         }
-                    });
 
-                    return xhr;
-                },
-                url: 'add_file',
-                type: 'POST',
-                data: new FormData(this),
-                dataType: 'json',
-                contentType: false,
-                cache: false,
-                processData: false,
-                timeout: 3600000,
-            }
-            ).done(
-                function (data) {
-                    refresh();
+                        if (data.error != null) {
+                            uploadErrorBtnState(data.error);
+                            return;
+                        }
 
-                    if (file_input[0].files[0].size === 0) {
-                        uploadErrorBtnState('Your file does not contain anything!');
-                        return;
-                    }
+                        cancel_button.attr('hidden', 'true');
 
-                    if (data.error != null) {
-                        uploadErrorBtnState(data.error);
-                        return;
-                    }
+                        close_button.removeAttr('hidden');
 
-                    cancel_button.attr('hidden', 'true');
-
-                    close_button.removeAttr('hidden');
-
-                    retry_button
-                        .text('Upload another file')
-                        .removeClass('btn-warning')
-                        .addClass('btn-secondary')
-                        .removeAttr('hidden');
-
-                    upload_status.removeAttr('hidden')
-                        .append('Your file has been uploaded!');
-
-                    progressBar.addClass('bg-success');
-                }
-            ).fail(
-                function (xhr, status, error) {
-                    refresh();
-
-                    if (xhr.readyState === 0) {
-                        uploadErrorBtnState('Upload has been interrupted');
                         retry_button
-                            .text('Upload another')
+                            .text('Upload another file')
                             .removeClass('btn-warning')
+                            .addClass('btn-secondary')
                             .removeAttr('hidden');
 
-                        return;
-                    }
+                        upload_status.removeAttr('hidden')
+                            .append('Your file has been uploaded!');
 
-                    if (file_input[0].files[0].size >= 120000000) {
-                        uploadErrorBtnState('Your file exceeds maximum size allowed!');
-                        return;
-                    }
+                        progressBar.addClass('bg-success');
 
-                    errorText = 'Could not connect to the server.';
-                    uploadErrorBtnState(errorText);
-                }
-            );
+                        fileDisplayTable.ajax.reload();
+                    })
+                .fail(
+                    function (xhr, status, error) {
+                        refresh();
+
+                        if (xhr.readyState === 0) {
+                            uploadErrorBtnState('Upload has been interrupted');
+                            retry_button
+                                .text('Upload another')
+                                .removeClass('btn-warning')
+                                .removeAttr('hidden');
+
+                            return;
+                        }
+
+                        if (file_input[0].files[0].size >= 120000000) {
+                            uploadErrorBtnState('Your file exceeds maximum size allowed!');
+                            return;
+                        }
+
+                        errorText = 'Could not connect to the server.';
+                        uploadErrorBtnState(errorText);
+                    }
+                );
         }
     );
 
@@ -351,10 +289,9 @@ $(document).ready(function () {
         }
     );
 
-    // ------------------------------------- //
-    // MODALS
-    // ------------------------------------- //
-    // ------------------------------------- //
+    // ------ //
+    // MODALS //
+    // ------ //
 
     // dynamically generate delete modal contents
     $('#delete_modal').on(
@@ -369,6 +306,7 @@ $(document).ready(function () {
         }
     );
 
+    // delete ajax request
     $('#deleteFile_btn').click(
         function (e) {
             e.preventDefault();
@@ -382,7 +320,7 @@ $(document).ready(function () {
             }
             ).done(
                 function (data) {
-                    refresh();
+                    fileDisplayTable.ajax.reload();
                 }
             ).fail(
                 function (data) {

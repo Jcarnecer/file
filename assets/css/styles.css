@@ -223,6 +223,12 @@ body {
   box-shadow: none;
 }
 
-table tbody tr td p {
-  margin: 0;
+table tbody tr td {
+  height: 35px;
+  line-height: 35px;
+  vertical-align: middle !important;
+}
+
+.center-v {
+  vertical-align: middle !important;
 }

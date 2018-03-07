@@ -35,8 +35,6 @@ class FileController extends BaseController
                 'root' => true,
             ]);
 
-        //print_r($data);
-
         return parent::main_page("file/index", $data ?? null);
     }
 
@@ -50,45 +48,8 @@ class FileController extends BaseController
                 'root' => true,
             ]);
 
-        //print_r($data);
-
         echo json_encode($data);
     }
-
-    /*
-    public function make_new_folder() {
-    $this->load->library('Utilities');
-
-    //var_dump($this->session->project['id']); die;
-
-    $new_folder_data = array(
-    'id' => $this->utilities->create_random_string(11),
-    'name' => $this->input->post('new_folder_name'),
-    'type' => 'folder',
-    'parent' => $this->session->project['id'],
-    'company_id' => $this->session->project['company_id'],
-    'project_id' => $this->session->project['id'],
-    'owner_id' => $this->session->user->id
-    );
-
-    if ($this->Files_Model->create_folder($new_folder_data)) {
-    echo "ERROR IN INSERTING"; die;
-    }
-
-    $project_id = $this->session->project['id'];
-    redirect("project/$project_id");
-    }
-
-    public function show_all_contents() {
-    $result = $this->Files_model->get_contents();
-
-    $data['dirs'] = $result;
-    //var_dump($data['dirs']); die;
-    return parent::main_page("file/index", $data ?? null);
-
-    //echo json_encode($result);
-    }
-     */
 
     public function add_file()
     {
@@ -117,19 +78,19 @@ class FileController extends BaseController
 
         } else {
             $new_file_data = array(
-                'id'         => $gen_file_name,
-                'name'       => $this->upload->data('client_name'),
+                'id' => $gen_file_name,
+                'name' => $this->upload->data('client_name'),
                 //'type' => $this->upload->data('file_ext'),
-                'location'   => $this->session->project['id'],
+                'location' => $this->session->project['id'],
                 'company_id' => $this->session->project['company_id'],
                 //'project_id' => $this->session->project['id'],
-                'size'       => $this->upload->data('file_size'),
+                'size' => $this->upload->data('file_size'),
                 'created_by' => $this->session->user->id,
                 'updated_by' => $this->session->user->id,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s"),
-                'deleted'    => 0,
-                'source'     => "assets/uploads/" . $this->upload->data('file_name'),
+                'deleted' => 0,
+                'source' => "assets/uploads/" . $this->upload->data('file_name'),
             );
 
             $status_msg = array('success' => 'Upload Success');
@@ -144,11 +105,32 @@ class FileController extends BaseController
 
     public function delete_file($id)
     {
-        if ($this->file->delete($id)){
+        if ($this->file->delete($id)) {
             $status_msg = array('success' => 'Delete Success');
         } else {
             $status_msg = array('error' => 'Database connection error.');
         }
+    }
+
+    public function getIconClass($file_ext)
+    {
+        $supported_files = array(
+            'txt' => 'fa-file',
+            'doc' => 'fa-file-word',
+            'docx' => 'fa-file-word',
+            'xls' => 'fa-file-excel',
+            'xlsx' => 'fa-file-excel',
+            'ppt' => 'fa-file-powerpoint',
+            'pptx' => 'fa-file-powerpoint',
+            'pdf' => 'fa-file-pdf',
+            'zip' => 'fa-file-archive',
+            'rar' => 'fa-file-archive',
+            'jpg' => 'fa-file-image',
+            'gif' => 'fa-file-image',
+            'png' => 'fa-file-image',
+        );
+
+        echo json_encode($supported_files["$file_ext"]);
     }
 
     /* ************** These are functions to be used when creating new folders.. to be updated ***************** @author JM
@@ -171,5 +153,40 @@ $data = [
 
 return $this->folder->update($data)
 }
+
+// new folder creation
+public function make_new_folder() {
+$this->load->library('Utilities');
+
+//var_dump($this->session->project['id']); die;
+
+$new_folder_data = array(
+'id' => $this->utilities->create_random_string(11),
+'name' => $this->input->post('new_folder_name'),
+'type' => 'folder',
+'parent' => $this->session->project['id'],
+'company_id' => $this->session->project['company_id'],
+'project_id' => $this->session->project['id'],
+'owner_id' => $this->session->user->id
+);
+
+if ($this->Files_Model->create_folder($new_folder_data)) {
+echo "ERROR IN INSERTING"; die;
+}
+
+$project_id = $this->session->project['id'];
+redirect("project/$project_id");
+}
+
+public function show_all_contents() {
+$result = $this->Files_model->get_contents();
+
+$data['dirs'] = $result;
+//var_dump($data['dirs']); die;
+return parent::main_page("file/index", $data ?? null);
+
+//echo json_encode($result);
+}
  */
+
 }
