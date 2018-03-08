@@ -51,6 +51,19 @@ class FileController extends BaseController
         echo json_encode($data);
     }
 
+    public function get_bin_contents()
+    {
+        $id = $this->session->project['id'];
+        $data['project_bin'] = $this
+            ->file
+            ->only_deleted()
+            ->get_many_by([
+                'location' => $id,
+            ]);
+
+        echo json_encode($data);
+    }
+
     public function add_file()
     {
         $this->load->library('Utilities');
@@ -59,7 +72,7 @@ class FileController extends BaseController
         $config['file_name'] = $gen_file_name;
         $config['upload_path'] = './assets/uploads/';
         $config['allowed_types'] = 'txt|doc|docx|xls|xlsx|ppt|pptx|pdf|zip|rar|jpg|gif|png';
-        $config['max_size'] = 5000; //120MB Max upload Size
+        $config['max_size'] = 5000; //5MB Max upload Size
         $config['max_filename'] = 255;
         $config['max_filename_increment'] = 999;
         //$config['encrypt_name'] = TRUE;
@@ -107,6 +120,15 @@ class FileController extends BaseController
     {
         if ($this->file->delete($id)) {
             $status_msg = array('success' => 'Delete Success');
+        } else {
+            $status_msg = array('error' => 'Database connection error.');
+        }
+    }
+
+    public function restore_file($id)
+    {
+        if ($this->file->update($id, array('deleted' => '0'))) {
+            $status_msg = array('success' => 'File Restored');
         } else {
             $status_msg = array('error' => 'Database connection error.');
         }
