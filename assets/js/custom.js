@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     // @author: Zahaire Guro
-
     var newFileForm = $('#new_file_form');
     var cancel_button = (newFileForm).find('button#cancel_upload');
     var submit_button = (newFileForm).find('button#upload');
@@ -13,8 +12,7 @@ $(document).ready(function () {
     var progressBar = $('#progressBar');
     var upload_modal_trigger = $('button#upload_modal_trigger');
     var instructions_div = $('div#instructions');
-    var fileBinTable = $('#fileBinTable');
-    var fileDisplayTable = $('#fileDataTable');
+    var restore_btn = $('#restore_btn');
 
     var fileID = "";
     var errorHTML = '<h4 class="text-danger font-weight-bold">Oops!</h4>';
@@ -24,7 +22,7 @@ $(document).ready(function () {
     // FILE RETRIEVE AJAX //
     // ------------------ //
 
-    fileDisplayTable.DataTable(
+    var fileDisplayTable = $('#fileDataTable').DataTable(
         {
             "ajax": {
                 "dataType": "json",
@@ -101,7 +99,7 @@ $(document).ready(function () {
         }
     );
 
-    fileBinTable.DataTable(
+    var fileBinTable = $('#fileBinTable').DataTable(
         {
             "ajax": {
                 "dataType": "json",
@@ -118,12 +116,6 @@ $(document).ready(function () {
             "order": [[0, 'asc']],
             "pageLength": 5,
             "destroy": true,
-            "columnDefs": [
-                {
-                    "className": "text-secondary text-center",
-                    "targets": [3]
-                }
-            ],
             "columns": [
                 { "data": "name" },
                 { "data": "updated_at" },
@@ -133,24 +125,62 @@ $(document).ready(function () {
                         var user = getUser(data);
                         return user.fullname;
                     }
-                },
-                {
-                    "data": "id",
-                    "width": "8%",
-                    "orderable": false,
-                    "render": function (data, type, row, meta) {
-                        return '<button type="button" class="btn btn-light restore-btn"><i class="fas fa-undo-alt"></i></button>'
-                    }
                 }
             ]
         }
     );
 
-    console.log($('.restore-btn'));
+    $('#fileBinTable tbody').on('click', 'tr',
+        function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                fileBinTable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+
+            if (fileBinTable.rows('.selected').data().length != 0) {
+                if (restore_btn.attr('disabled')) {
+                    restore_btn.removeAttr('disabled');
+                }
+            } else {
+                restore_btn.attr('disabled', 'true');
+            }
+        }
+    );
+
+    restore_btn.click(
+        function () {
+            var row_id = (fileBinTable.rows('.selected').data())[0].id;
+            restore_file(row_id);
+            fileBinTable.ajax.reload();
+            fileDisplayTable.ajax.reload();
+        }
+    );
+
+    function restore_file(id) {
+        console.log(id);
+        $.ajax(
+            {
+                method: 'GET',
+                async: true,
+                url: 'restore_file/' + id,
+                datatype: 'json'
+            })
+            .done(
+                function (data) {
+                    console.log(data);
+                })
+            .fail(
+                function (data) {
+                    console.log(data + " error");
+                });
+    }
 
     $('#bin_modal_trigger').click(
         function (e) {
-            //fileBinTable.ajax.reload();
+            fileBinTable.ajax.reload();
         }
     );
 
@@ -166,10 +196,11 @@ $(document).ready(function () {
     );
 
     function resetUploadButtons() {
-        instructions_div.css({
-            "height": "auto",
-            "opacity": "1"
-        }
+        instructions_div.css(
+            {
+                "height": "auto",
+                "opacity": "1"
+            }
         );
         file_input.val(null);
 
@@ -243,16 +274,16 @@ $(document).ready(function () {
 
             $.ajax(
                 {
-                    xhr: function () { // loader logic
-                        xhr.upload.addEventListener('progress', function (e) {
-                            if (e.lengthComputable) {
-                                var percent = Math.round((e.loaded / e.total) * 100);
-                                progressBar.attr('aria-valuenow', percent).css('width', percent + '%');
-                            }
-                        });
-
-                        return xhr;
-                    },
+                    xhr:
+                        function () { // loader logic
+                            xhr.upload.addEventListener('progress', function (e) {
+                                if (e.lengthComputable) {
+                                    var percent = Math.round((e.loaded / e.total) * 100);
+                                    progressBar.attr('aria-valuenow', percent).css('width', percent + '%');
+                                }
+                            });
+                            return xhr;
+                        },
                     url: 'add_file',
                     type: 'POST',
                     data: new FormData(this),
@@ -313,8 +344,7 @@ $(document).ready(function () {
 
                         errorText = 'Could not connect to the server.';
                         uploadErrorBtnState(errorText);
-                    }
-                );
+                    });
         }
     );
 
@@ -362,21 +392,21 @@ $(document).ready(function () {
         function (e) {
             e.preventDefault();
 
-            $.ajax({
-                method: 'GET',
-                async: true,
-                url: 'delete_file/' + fileID,
-                datatype: 'json'
-            }
-            ).done(
-                function (data) {
-                    fileDisplayTable.ajax.reload();
-                }
-            ).fail(
-                function (data) {
-                    console.log(data + " error");
-                }
-            );
+            $.ajax(
+                {
+                    method: 'GET',
+                    async: true,
+                    url: 'delete_file/' + fileID,
+                    datatype: 'json'
+                })
+                .done(
+                    function (data) {
+                        fileDisplayTable.ajax.reload();
+                    })
+                .fail(
+                    function (data) {
+                        console.log(data + " error");
+                    });
 
             $('#delete_modal').modal('hide');
         }

@@ -76,6 +76,10 @@
                             <div class="modal-body">
                                 <div class="container-fluid">
                                     <div class="row">
+                                        <div class="col text-right">
+                                            <button id="restore_btn" type="button" class="btn btn-primary mb-4" disabled="true">Restore</button>
+                                        </div>
+                                        <div class="w-100"></div>
                                         <div class="col">
                                             <table class="table w-100" id="fileBinTable">
                                                 <thead class="text-secondary table-sm">
@@ -83,7 +87,6 @@
                                                         <th>Name</th>
                                                         <th>Deleted</th>
                                                         <th>Deleted By</th>
-                                                        <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
