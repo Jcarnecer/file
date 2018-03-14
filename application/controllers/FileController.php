@@ -51,6 +51,19 @@ class FileController extends BaseController
         echo json_encode($data);
     }
 
+    public function get_bin_contents()
+    {
+        $id = $this->session->project['id'];
+        $data['project_bin'] = $this
+            ->file
+            ->only_deleted()
+            ->get_many_by([
+                'location' => $id,
+            ]);
+
+        echo json_encode($data);
+    }
+
     public function add_file()
     {
         $this->load->library('Utilities');
@@ -59,10 +72,9 @@ class FileController extends BaseController
         $config['file_name'] = $gen_file_name;
         $config['upload_path'] = './assets/uploads/';
         $config['allowed_types'] = 'txt|doc|docx|xls|xlsx|ppt|pptx|pdf|zip|rar|jpg|gif|png';
-        $config['max_size'] = 5000; //120MB Max upload Size
+        $config['max_size'] = 5000; //5MB Max upload Size
         $config['max_filename'] = 255;
         $config['max_filename_increment'] = 999;
-        //$config['encrypt_name'] = TRUE;
         $config['remove_spaces'] = true;
 
         //var_dump($config); die;
@@ -72,7 +84,6 @@ class FileController extends BaseController
         $status_msg = '';
 
         if (!$this->upload->do_upload('new_file')) {
-            //print_r($this->upload->data['file_size']);
             $status_msg = array('error' => $this->upload->display_errors());
             echo json_encode($status_msg);
 
@@ -80,10 +91,8 @@ class FileController extends BaseController
             $new_file_data = array(
                 'id' => $gen_file_name,
                 'name' => $this->upload->data('client_name'),
-                //'type' => $this->upload->data('file_ext'),
                 'location' => $this->session->project['id'],
                 'company_id' => $this->session->project['company_id'],
-                //'project_id' => $this->session->project['id'],
                 'size' => $this->upload->data('file_size'),
                 'created_by' => $this->session->user->id,
                 'updated_by' => $this->session->user->id,
@@ -110,6 +119,20 @@ class FileController extends BaseController
         } else {
             $status_msg = array('error' => 'Database connection error.');
         }
+
+        echo json_encode($status_msg);
+    }
+
+    public function restore_file($id)
+    {
+        if ($this->file->update($id, array('deleted' => '0'))) {
+            $status_msg = array('success' => 'File Restored');
+        } else {
+            $status_msg = array('error' => 'Database connection error.');
+        }
+
+        echo json_encode($status_msg);
+
     }
 
     public function getIconClass($file_ext)
