@@ -6,7 +6,8 @@
             <div class="bg-light w-100 py-3 px-5 clearfix" style="">
                 <nav class="text-secondary float-left" style="font-size:1.5rem;"><?=$current_directory['name']?></nav>
                 <div class="float-right">
-                    <button id="upload_modal_trigger" class="btn btn-primary" data-toggle="modal" data-target="#new_file_modal"><i class="fas fa-upload"></i>&nbsp;Upload File</button>
+                    <button id="bin_modal_trigger" type="button" class="btn btn-secondary mr-3" data-toggle="modal" data-target="#bin_modal"><i class="far fa-trash-alt"></i>&nbsp;View Bin</button>
+                    <button id="upload_modal_trigger" type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_file_modal"><i class="fas fa-upload"></i>&nbsp;Upload File</button>
                 </div>
 
                 <div class="modal fade" id="new_file_modal" tabindex="-1" role="dialog" aria-labelledby="new_file_modal" aria-hidden="true">
@@ -16,7 +17,7 @@
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modal-title">Upload New File</h5>
                                 <button id='close_upload' type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                    <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
@@ -62,10 +63,49 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="modal fade bd-example-modal-lg" id="bin_modal" tabindex="-1" role="dialog" aria-labelledby="bin_modal" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Bin</h5>
+                                <button id='close_upload' type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col text-right">
+                                            <button id="restore_btn" type="button" class="btn btn-primary mb-4" disabled="true">Restore</button>
+                                        </div>
+                                        <div class="w-100"></div>
+                                        <div class="col">
+                                            <table class="table w-100" id="fileBinTable">
+                                                <thead class="text-secondary table-sm">
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Deleted</th>
+                                                        <th>Deleted By</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <p class="m-0"><i class="fas fa-info-circle"></i> Files sent to the bin will be permanently deleted after sixty (60) days.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="pt-4 ">
-                <table class="table table-hover w-100" id="fileDataTable">
+            <div class="pt-4">
+                <table class="table w-100" id="fileDataTable">
                     <thead class="text-secondary">
                         <tr>
                             <th></th>

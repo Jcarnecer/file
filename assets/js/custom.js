@@ -1,7 +1,6 @@
 $(document).ready(function () {
 
     // @author: Zahaire Guro
-
     var newFileForm = $('#new_file_form');
     var cancel_button = (newFileForm).find('button#cancel_upload');
     var submit_button = (newFileForm).find('button#upload');
@@ -13,93 +12,177 @@ $(document).ready(function () {
     var progressBar = $('#progressBar');
     var upload_modal_trigger = $('button#upload_modal_trigger');
     var instructions_div = $('div#instructions');
+    var restore_btn = $('#restore_btn');
 
     var fileID = "";
     var errorHTML = '<h4 class="text-danger font-weight-bold">Oops!</h4>';
     var xhr = new window.XMLHttpRequest();
 
-    // refresh files on load
-    // refresh();
-
     // ------------------ //
     // FILE RETRIEVE AJAX //
     // ------------------ //
 
-    var fileDisplayTable = $('#fileDataTable')
-        .DataTable(
-            {
-                "ajax": {
-                    "dataType": "json",
-                    "url": "get_dir_contents",
-                    "type": "GET",
-                    "dataSrc": "current_directory.file",
-                    "select": "true"
+    var fileDisplayTable = $('#fileDataTable').DataTable(
+        {
+            "ajax": {
+                "dataType": "json",
+                "url": "get_dir_contents",
+                "type": "GET",
+                "dataSrc": "current_directory.file",
+            },
+            "language": {
+                "emptyTable": "No files available."
+            },
+            "columnDefs": [
+                {
+                    "className": "text-secondary",
+                    "targets": [2, 3, 4, 5]
                 },
-                "columnDefs": [
-                    {
-                        "className": "text-secondary",
-                        "targets": [2, 3, 4, 5]
-                    },
-                    {
-                        "className": "text-center",
-                        "targets": [0, 6]
+                {
+                    "className": "text-center",
+                    "targets": [0, 6]
+                }
+            ],
+            "columns": [
+                {
+                    "data": "name",
+                    "width": "5%",
+                    "orderable": false,
+                    "render": function (data, type, row, meta) {
+                        var fasClass = getIconClass(data.substring(data.lastIndexOf(".") + 1));
+                        return '<i class="fas fa-2x center-v h-100 ' + fasClass + '"></i>';
                     }
-                ],
-                "columns": [
-                    {
-                        "data": "name",
-                        "width": "5%",
-                        "orderable": false,
-                        "render": function (data, type, row, meta) {
-                            var fasClass = getIconClass(data.substring(data.lastIndexOf(".") + 1));
-                            return '<i class="fas fa-2x center-v h-100 ' + fasClass + '"></i>';
-                        }
-                    },
-                    {
-                        "data": "name",
-                        "width": "45%"
-                    },
-                    {
-                        "data": "created_at",
-                        "width": "10%"
-                    },
-                    {
-                        "data": "updated_at",
-                        "width": "10%"
-                    },
-                    {
-                        "data": "updated_by",
-                        "width": "12%",
-                        "render": function (data, type, row, meta) {
-                            var user = getUser(data);;
-                            return user.fullname;
-                        }
-                    },
-                    {
-                        "data": "size",
-                        "width": "10%",
-                        "render":
-                            function (data, type, row, meta) {
-                                return data + ' KB';
-                            }
-                    },
-                    {
-                        "data": null,
-                        "orderable": false,
-                        "render":
-                            function (data, type, row, meta) {
-                                downloadBtn_str = '<a href="' + row.source + '" download="' + row.name + '" class="btn btn-success m-1"><i class="fas fa-download"></i></a>';
-                                deleteBtn_str = '<button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#delete_modal" data-fileid="' + row.id + '"><i class="fas fa-trash"></i></button>';
-                                return downloadBtn_str + deleteBtn_str;
-                            }
+                },
+                {
+                    "data": "name",
+                    "width": "45%"
+                },
+                {
+                    "data": "created_at",
+                    "width": "10%"
+                },
+                {
+                    "data": "updated_at",
+                    "width": "10%"
+                },
+                {
+                    "data": "updated_by",
+                    "width": "12%",
+                    "render": function (data, type, row, meta) {
+                        var user = getUser(data);
+                        return user.fullname;
                     }
-                ],
-                "processing": true,
-                "paging": true,
-                "order": [[1, 'asc']],
-                "pageLength": 10
+                },
+                {
+                    "data": "size",
+                    "width": "10%",
+                    "render":
+                        function (data, type, row, meta) {
+                            return data + ' KB';
+                        }
+                },
+                {
+                    "data": null,
+                    "orderable": false,
+                    "render":
+                        function (data, type, row, meta) {
+                            downloadBtn_str = '<a href="' + row.source + '" download="' + row.name + '" class="btn btn-success m-1"><i class="fas fa-download"></i></a>';
+                            deleteBtn_str = '<button type="button" class="btn btn-danger m-1" data-toggle="modal" data-target="#delete_modal" data-fileid="' + row.id + '"><i class="fas fa-trash"></i></button>';
+                            return downloadBtn_str + deleteBtn_str;
+                        }
+                }
+            ],
+            "processing": true,
+            "paging": true,
+            "order": [[1, 'asc']],
+            "pageLength": 10
+        }
+    );
+
+    var fileBinTable = $('#fileBinTable').DataTable(
+        {
+            "ajax": {
+                "dataType": "json",
+                "async": "true",
+                "url": "get_bin_contents",
+                "type": "GET",
+                "dataSrc": "project_bin",
+            },
+            "language": {
+                "emptyTable": "No files here"
+            },
+            "processing": true,
+            "paging": true,
+            "order": [[0, 'asc']],
+            "pageLength": 5,
+            "destroy": true,
+            "columns": [
+                { "data": "name" },
+                { "data": "updated_at" },
+                {
+                    "data": "updated_by",
+                    "render": function (data, type, row, meta) {
+                        var user = getUser(data);
+                        return user.fullname;
+                    }
+                }
+            ]
+        }
+    );
+
+    $('#fileBinTable tbody').on('click', 'tr',
+        function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
             }
-        );
+            else {
+                fileBinTable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+
+            if (fileBinTable.rows('.selected').data().length != 0) {
+                if (restore_btn.attr('disabled')) {
+                    restore_btn.removeAttr('disabled');
+                }
+            } else {
+                restore_btn.attr('disabled', 'true');
+            }
+        }
+    );
+
+    restore_btn.click(
+        function () {
+            var row_id = (fileBinTable.rows('.selected').data())[0].id;
+            restore_file(row_id);
+            fileBinTable.ajax.reload();
+            fileDisplayTable.ajax.reload();
+        }
+    );
+
+    function restore_file(id) {
+        console.log(id);
+        $.ajax(
+            {
+                method: 'GET',
+                async: true,
+                url: 'restore_file/' + id,
+                datatype: 'json'
+            })
+            .done(
+                function (data) {
+                    console.log(data);
+                })
+            .fail(
+                function (data) {
+                    console.log(data + " error");
+                });
+    }
+
+    $('#bin_modal_trigger').click(
+        function (e) {
+            fileBinTable.ajax.reload();
+        }
+    );
 
     // ------------------ //
     // FILE UPLOAD AJAX //
@@ -113,10 +196,11 @@ $(document).ready(function () {
     );
 
     function resetUploadButtons() {
-        instructions_div.css({
-            "height": "auto",
-            "opacity": "1"
-        }
+        instructions_div.css(
+            {
+                "height": "auto",
+                "opacity": "1"
+            }
         );
         file_input.val(null);
 
@@ -190,16 +274,16 @@ $(document).ready(function () {
 
             $.ajax(
                 {
-                    xhr: function () { // loader logic
-                        xhr.upload.addEventListener('progress', function (e) {
-                            if (e.lengthComputable) {
-                                var percent = Math.round((e.loaded / e.total) * 100);
-                                progressBar.attr('aria-valuenow', percent).css('width', percent + '%');
-                            }
-                        });
-
-                        return xhr;
-                    },
+                    xhr:
+                        function () { // loader logic
+                            xhr.upload.addEventListener('progress', function (e) {
+                                if (e.lengthComputable) {
+                                    var percent = Math.round((e.loaded / e.total) * 100);
+                                    progressBar.attr('aria-valuenow', percent).css('width', percent + '%');
+                                }
+                            });
+                            return xhr;
+                        },
                     url: 'add_file',
                     type: 'POST',
                     data: new FormData(this),
@@ -253,15 +337,14 @@ $(document).ready(function () {
                             return;
                         }
 
-                        if (file_input[0].files[0].size >= 120000000) {
+                        if (file_input[0].files[0].size >= 5 * (1024) * (1025)) {
                             uploadErrorBtnState('Your file exceeds maximum size allowed!');
                             return;
                         }
 
                         errorText = 'Could not connect to the server.';
                         uploadErrorBtnState(errorText);
-                    }
-                );
+                    });
         }
     );
 
@@ -301,8 +384,6 @@ $(document).ready(function () {
             var modal = $(this);
 
             fileID = rowFileID;
-
-            console.log('modal show fileIDs: ' + fileID);
         }
     );
 
@@ -310,23 +391,22 @@ $(document).ready(function () {
     $('#deleteFile_btn').click(
         function (e) {
             e.preventDefault();
-            console.log('delete btn fileID: ' + fileID);
 
-            $.ajax({
-                method: 'GET',
-                async: true,
-                url: 'delete_file/' + fileID,
-                datatype: 'json'
-            }
-            ).done(
-                function (data) {
-                    fileDisplayTable.ajax.reload();
-                }
-            ).fail(
-                function (data) {
-                    console.log(data + " error");
-                }
-            );
+            $.ajax(
+                {
+                    method: 'GET',
+                    async: true,
+                    url: 'delete_file/' + fileID,
+                    datatype: 'json'
+                })
+                .done(
+                    function (data) {
+                        fileDisplayTable.ajax.reload();
+                    })
+                .fail(
+                    function (data) {
+                        console.log(data + " error");
+                    });
 
             $('#delete_modal').modal('hide');
         }
