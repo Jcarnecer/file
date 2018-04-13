@@ -1,6 +1,10 @@
 <!-- start sidebar -->
 <div id="sidebar" style="overflow-y: auto;">
-
+    <div id="nav-icon-back">
+        <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/main' : 'http://payakapps.com' ?>">
+            <i style="color:#fff;height: 25px;position: relative;width:30px;" class="fa fa-arrow-left"></i>
+        </a>
+    </div>
     <div id="nav-icon-close" class="custom-toggle">
         <span></span>
         <span></span>
@@ -17,7 +21,7 @@
 	            	}
             	?>">
                 <i class="fa fa-tasks" aria-hidden="true"></i>
-                <span>Personal Task</span>
+                <span>Personal Tasks</span>
             </a>    
         </li>
         
@@ -48,23 +52,30 @@
 <!-- end sidebar -->
 <div class="main-content h-100">
 
-    <div class="topbar">
-        <nav class="navbar navbar-custom clearfix">
+    <div class="topbar w-100" style="margin-bottom: -20px;">
+        <nav class="navbar navbar-custom navbar-expand-lg">
             <div id="nav-icon-open" class="custom-toggle hidden-toggle">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-
-            <a class="navbar-brand font-weight-bold text-uppercase" href="<?= base_url('tasks'); ?>">
+            <a class="navbar-brand" href="">
                 <?= $project['name'] ?>
             </a>
             
-            <span class="ml-auto">
-                <a href="#" data-toggle="popover" data-placement="bottom"  data-content="<?= $user->email_address ?>" data-trigger="hover">
-                    <img class="img-avatar mr-2" src="<?= $user->avatar_url ?>"><?= $user->first_name.' '.$user->last_name ?>
-                </a>
-            </span>
+            <ul class="navbar-nav flex-row ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <img class="img-avatar mr-2" src="<?= $user->avatar_url ?>"><?= $user->first_name . ' ' . $user->last_name ?>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="<?= ENVIRONMENT === "development" ? 'http://localhost/main/users/profile' : 'http://payakapps.com/users/profile' ?>">My Profile</a>
+                        <a class="dropdown-item" href="<?= ENVIRONMENT === "development" ? 'http://localhost/main/users/profile/change-password' : 'http://payakapps.com/users/profile/change-password' ?>">My Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="<?= LOGOUT_URL ?>">Logout</a>
+                    </div>
+                </li>
+            </ul>
         </nav>
     </div>
     
