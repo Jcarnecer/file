@@ -30,7 +30,7 @@ switch(ENVIRONMENT) {
 		$config['base_url'] = 'http://file.payakapps.com/';
 		break;
 	case 'testing':
-		$config['base_url'] = 'http://stage.payakapps.com/';
+		$config['base_url'] = 'https://stage.payakapps.com/';
 		break;
 	default:
 		$config['base_url'] = 'http://localhost/file/';
