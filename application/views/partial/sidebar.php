@@ -1,7 +1,7 @@
 <!-- start sidebar -->
 <div id="sidebar" style="overflow-y: auto;">
     <div id="nav-icon-back">
-        <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/main' : 'http://payakapps.com' ?>">
+        <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/main' : 'https://payakapps.com' ?>">
             <i style="color:#fff;height: 25px;position: relative;width:30px;" class="fa fa-arrow-left"></i>
         </a>
     </div>
@@ -17,7 +17,7 @@
             		if(ENVIRONMENT==="development") {
                         echo "http://localhost/task/personal";
                     } else {
-            			echo "http://task.payakapps.com/personal";
+            			echo "https://task.payakapps.com/personal";
 	            	}
             	?>">
                 <i class="fa fa-tasks" aria-hidden="true"></i>
@@ -69,8 +69,8 @@
                         <img class="img-avatar mr-2" src="<?= $user->avatar_url ?>"><?= $user->first_name . ' ' . $user->last_name ?>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="<?= ENVIRONMENT === "development" ? 'http://localhost/main/users/profile' : 'http://payakapps.com/users/profile' ?>">My Profile</a>
-                        <a class="dropdown-item" href="<?= ENVIRONMENT === "development" ? 'http://localhost/main/users/profile/change-password' : 'http://payakapps.com/users/profile/change-password' ?>">My Password</a>
+                        <a class="dropdown-item" href="<?= ENVIRONMENT === "development" ? 'http://localhost/main/users/profile' : 'https://payakapps.com/users/profile' ?>">My Profile</a>
+                        <a class="dropdown-item" href="<?= ENVIRONMENT === "development" ? 'http://localhost/main/users/profile/change-password' : 'https://payakapps.com/users/profile/change-password' ?>">My Password</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="<?= LOGOUT_URL ?>">Logout</a>
                     </div>
@@ -82,10 +82,10 @@
     <div class="inner-content d-flex flex-column p-0">
         <ul class="nav nav-tabs d-flex flex-nowrap project-buttons">
             <li class="nav-item w-100">
-                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/task/project/' . $project['id'] : 'http://task.payakapps.com//project/' . $project['id'] ?>" class="nav-link project-button" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i> Tasks</a>
+                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/task/project/' . $project['id'] : 'https://task.payakapps.com//project/' . $project['id'] ?>" class="nav-link project-button" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i> Tasks</a>
             </li>
             <li class="nav-item w-100">
-                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/forum/project/' . $project['id'] : 'http://forum.payakapps.com//project/' . $project['id'] ?>" class="nav-link secondary-button"><i class="fa fa-exchange-alt"></i> Discussion</a>
+                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/forum/project/' . $project['id'] : 'https://forum.payakapps.com//project/' . $project['id'] ?>" class="nav-link secondary-button"><i class="fa fa-exchange-alt"></i> Discussion</a>
             </li>
             <li class="nav-item w-100">
                 <a href="<?= base_url('/project/' . $project['id']) ?>" onclick="javascript:void(0)" class="nav-link secondary-button active"  role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-file"></i> Files</a>
