@@ -1,6 +1,10 @@
 <!-- start sidebar -->
 <div id="sidebar" style="overflow-y: auto;">
-
+    <div id="nav-icon-back">
+        <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/main' : 'https://payakapps.com' ?>">
+            <i style="color:#fff;height: 25px;position: relative;width:30px;" class="fa fa-arrow-left"></i>
+        </a>
+    </div>
     <div id="nav-icon-close" class="custom-toggle">
         <span></span>
         <span></span>
@@ -13,11 +17,11 @@
             		if(ENVIRONMENT==="development") {
                         echo "http://localhost/task/personal";
                     } else {
-            			echo "http://task.payakapps.com/personal";
+            			echo "https://task.payakapps.com/personal";
 	            	}
             	?>">
                 <i class="fa fa-tasks" aria-hidden="true"></i>
-                <span>Personal Task</span>
+                <span>Personal Tasks</span>
             </a>    
         </li>
         
@@ -48,33 +52,40 @@
 <!-- end sidebar -->
 <div class="main-content h-100">
 
-    <div class="topbar">
-        <nav class="navbar navbar-custom clearfix">
+    <div class="topbar w-100" style="margin-bottom: -20px;">
+        <nav class="navbar navbar-custom navbar-expand-lg">
             <div id="nav-icon-open" class="custom-toggle hidden-toggle">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-
-            <a class="navbar-brand font-weight-bold text-uppercase" href="<?= base_url('tasks'); ?>">
+            <a class="navbar-brand" href="">
                 <?= $project['name'] ?>
             </a>
             
-            <span class="ml-auto">
-                <a href="#" data-toggle="popover" data-placement="bottom"  data-content="<?= $user->email_address ?>" data-trigger="hover">
-                    <img class="img-avatar mr-2" src="<?= $user->avatar_url ?>"><?= $user->first_name.' '.$user->last_name ?>
-                </a>
-            </span>
+            <ul class="navbar-nav flex-row ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <img class="img-avatar mr-2" src="<?= $user->avatar_url ?>"><?= $user->first_name . ' ' . $user->last_name ?>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="<?= ENVIRONMENT === "development" ? 'http://localhost/main/users/profile' : 'https://payakapps.com/users/profile' ?>">My Profile</a>
+                        <a class="dropdown-item" href="<?= ENVIRONMENT === "development" ? 'http://localhost/main/users/profile/change-password' : 'https://payakapps.com/users/profile/change-password' ?>">My Password</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="<?= LOGOUT_URL ?>">Logout</a>
+                    </div>
+                </li>
+            </ul>
         </nav>
     </div>
     
     <div class="inner-content d-flex flex-column p-0">
         <ul class="nav nav-tabs d-flex flex-nowrap project-buttons">
             <li class="nav-item w-100">
-                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/task/project/' . $project['id'] : 'http://task.payakapps.com//project/' . $project['id'] ?>" class="nav-link project-button" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i> Tasks</a>
+                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/task/project/' . $project['id'] : 'https://task.payakapps.com//project/' . $project['id'] ?>" class="nav-link project-button" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-tasks"></i> Tasks</a>
             </li>
             <li class="nav-item w-100">
-                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/forum/project/' . $project['id'] : 'http://forum.payakapps.com//project/' . $project['id'] ?>" class="nav-link secondary-button"><i class="fa fa-exchange-alt"></i> Discussion</a>
+                <a href="<?= ENVIRONMENT === 'development' ? 'http://localhost/forum/project/' . $project['id'] : 'https://forum.payakapps.com//project/' . $project['id'] ?>" class="nav-link secondary-button"><i class="fa fa-exchange-alt"></i> Discussion</a>
             </li>
             <li class="nav-item w-100">
                 <a href="<?= base_url('/project/' . $project['id']) ?>" onclick="javascript:void(0)" class="nav-link secondary-button active"  role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-file"></i> Files</a>

@@ -17,7 +17,7 @@ class SiteController extends BaseController
 			if(ENVIRONMENT === 'development')
 				redirect('http://localhost/task');
 			else
-				redirect('http://task.payakapps.com');
+				redirect('https://task.payakapps.com');
 		} else {
 			redirect(LOGIN_URL);
 		}
