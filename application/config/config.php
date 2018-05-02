@@ -33,7 +33,7 @@ switch(ENVIRONMENT) {
 		$config['base_url'] = 'https://stage.payakapps.com/';
 		break;
 	default:
-		$config['base_url'] = 'http://localhost/file/';
+		$config['base_url'] = 'https://localhost/file/';
 		break;
 }
 
