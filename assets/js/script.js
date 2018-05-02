@@ -1,7 +1,7 @@
 switch(window.location.origin){
     case 'https://file.payakapps.com': var baseUrl = 'https://file.payakapps.com/'; break;
     case 'https://stage.payakapps.com': var baseUrl = 'https://stage.payakapps.com/'; break;
-    default: var baseUrl = 'http://localhost/file/'; break;
+    default: var baseUrl = 'https://localhost/file/'; break;
 }
 
 var apiUrl = baseUrl + "/api/dev";
