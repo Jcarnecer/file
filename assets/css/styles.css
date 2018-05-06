@@ -189,6 +189,7 @@ body {
 .nav-tabs .nav-link {
   border: none;
   border-radius: 0;
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.5);
 }
 
 .navlink:hover {
