@@ -10,6 +10,7 @@ $route['get_bin_contents'] = "FileController/get_bin_contents";
 $route['add_file'] = "FileController/add_file";
 $route['delete_file/(:any)'] = "FileController/delete_file/$1";
 $route['restore_file/(:any)'] = "FileController/restore_file/$1";
+$route['permanent_delete/(:any)'] = "FileController/permanent_delete/$1";
 
 # api
 $route['api/user/(:any)'] = "UserController/get/$1";

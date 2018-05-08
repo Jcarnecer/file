@@ -77,6 +77,7 @@
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col text-right">
+                                            <button id="perm_delete_btn" type="button" class="btn btn-danger mb-4 mr-2" disabled="true">Permanently Delete</button>
                                             <button id="restore_btn" type="button" class="btn btn-primary mb-4" disabled="true">Restore</button>
                                         </div>
                                         <div class="w-100"></div>
@@ -97,7 +98,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <p class="m-0"><i class="fas fa-info-circle"></i> Files sent to the bin will be permanently deleted after sixty (60) days.</p>
+                                <p class="m-0"><i class="fas fa-info-circle"></i> Files sent to the bin will be permanently deleted after thirty (30) days.</p>
                             </div>
                         </div>
                     </div>
@@ -155,6 +156,28 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
                                 <button id="deleteFile_btn" data-fileid="" class="btn btn-secondary">Yes, I want to delete this file</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PERMANENT DELETE MODAL -->
+                <div class="modal fade" id="perm_delete_modal" tabindex="-1" role="dialog" aria-labelledby="PermDeleteFile" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="perm_delete_modal_label">Confirm Permanent Delete</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="">Are you sure you want to <span class="text-danger">delete</span> this file?</p>
+                                <p class="text-danger">This action cannot be undone.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="permDeleteFile_btn" data-fileid="" class="btn btn-secondary">Permanently Delete</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
                             </div>
                         </div>
                     </div>
