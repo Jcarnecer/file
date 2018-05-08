@@ -67,6 +67,8 @@ class FileController extends BaseController
     public function add_file()
     {
         $this->load->library('Utilities');
+        
+
         $gen_file_name = $this->utilities->create_random_string(11); // create file name
 
         $config['file_name'] = $gen_file_name;
@@ -77,8 +79,6 @@ class FileController extends BaseController
         $config['max_filename_increment'] = 999;
         $config['remove_spaces'] = true;
 
-        //var_dump($config); die;
-
         $this->upload->initialize($config);
 
         $status_msg = '';
@@ -86,26 +86,36 @@ class FileController extends BaseController
         if (!$this->upload->do_upload('new_file')) {
             $status_msg = array('error' => $this->upload->display_errors());
             echo json_encode($status_msg);
-
         } else {
-            $new_file_data = array(
-                'id' => $gen_file_name,
-                'name' => $this->upload->data('client_name'),
-                'location' => $this->session->project['id'],
-                'company_id' => $this->session->project['company_id'],
-                'size' => $this->upload->data('file_size'),
-                'created_by' => $this->session->user->id,
-                'updated_by' => $this->session->user->id,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s"),
-                'deleted' => 0,
-                'source' => "assets/uploads/" . $this->upload->data('file_name'),
-            );
+            // transfer uploaded file to S3
+            $file = FCPATH . 'assets\\uploads\\' . $this->upload->data('file_name');
+            $result = $this->s3->uploadFile($file);
 
-            $status_msg = array('success' => 'Upload Success');
+            if ($result['code'] == 0){
+                // insert to database
+                $new_file_data = array(
+                    'id' => $gen_file_name,
+                    'name' => $this->upload->data('client_name'),
+                    'location' => $this->session->project['id'],
+                    'company_id' => $this->session->project['company_id'],
+                    'size' => $this->upload->data('file_size'),
+                    'created_by' => $this->session->user->id,
+                    'updated_by' => $this->session->user->id,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s"),
+                    'deleted' => 0,
+                    'source' => $result['data']
+                );
+                
+                if ($this->file->insert($new_file_data)) {
+                    $status_msg = array('error' => 'Database Connection Error');
+                }
 
-            if ($this->file->insert($new_file_data)) {
-                $status_msg = array('error' => 'Database Connection Error');
+                // remove the file from the server
+                unlink($file);
+                $status_msg = array('success' => $result['msg']);
+            } else {
+                $status_msg = array('error' => 'Upload to S3 Server Failed');
             }
 
             echo json_encode($status_msg);
@@ -114,10 +124,18 @@ class FileController extends BaseController
 
     public function delete_file($id)
     {
-        if ($this->file->delete($id)) {
-            $status_msg = array('success' => 'Delete Success');
+        $filename = explode("/", $this->file->get($id)['source'])[5];
+
+        $result = $this->s3->binFile($filename);
+
+        if ($result['code'] == 0) {
+            if ($this->file->delete($id)) {
+                $status_msg = array('success' => 'Delete Success');
+            } else {
+                $status_msg = array('error' => 'Database connection error.');
+            }
         } else {
-            $status_msg = array('error' => 'Database connection error.');
+            $status_msg = array('error' => 'AWS S3 Connection error.');
         }
 
         echo json_encode($status_msg);
@@ -125,14 +143,40 @@ class FileController extends BaseController
 
     public function restore_file($id)
     {
-        if ($this->file->update($id, array('deleted' => '0'))) {
-            $status_msg = array('success' => 'File Restored');
+        $filename = explode("/", $this->file->only_deleted()->get($id)['source'])[5];
+
+        $result = $this->s3->restoreFile($filename);
+
+        if ($result['code'] == 0) {
+            if ($this->file->update($id, array('deleted' => '0'))) {
+                $status_msg = array('success' => 'File Restored');
+            } else {
+                $status_msg = array('error' => 'Database connection error.');
+            }
         } else {
-            $status_msg = array('error' => 'Database connection error.');
+            $status_msg = array('error' => 'AWS S3 Connection error.');
         }
 
         echo json_encode($status_msg);
+    }
 
+    public function permanent_delete($id)
+    {
+        $filename = explode("/", $this->file->only_deleted()->get($id)['source'])[5];
+
+        $result = $this->s3->deleteFile($filename);
+
+        if ($result['code'] == 0) {
+            if ($this->file->permanent_delete($id)) {
+                $status_msg = array('success' => 'File permanently deleted');
+            } else {
+                $status_msg = array('error' => 'Database connection error.');
+            }
+        } else {
+            $status_msg = array('error' => 'AWS S3 Connection error.');
+        }
+
+        echo json_encode($status_msg);
     }
 
     public function getIconClass($file_ext)

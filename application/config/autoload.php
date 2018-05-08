@@ -63,7 +63,8 @@ $autoload['libraries'] = [
 	"encryption",
 	"form_validation",
 	"session",
-	"upload"
+	"upload",
+	"s3"
 ];
 
 /*

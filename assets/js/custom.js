@@ -13,6 +13,7 @@ $(document).ready(function () {
     var upload_modal_trigger = $('button#upload_modal_trigger');
     var instructions_div = $('div#instructions');
     var restore_btn = $('#restore_btn');
+    var perm_delete_btn = $('#perm_delete_btn');
 
     var fileID = "";
     var errorHTML = '<h4 class="text-danger font-weight-bold">Oops!</h4>';
@@ -144,8 +145,12 @@ $(document).ready(function () {
                 if (restore_btn.attr('disabled')) {
                     restore_btn.removeAttr('disabled');
                 }
+                if (perm_delete_btn.attr('disabled')) {
+                    perm_delete_btn.removeAttr('disabled');
+                }
             } else {
                 restore_btn.attr('disabled', 'true');
+                perm_delete_btn.attr('disabled', 'true');
             }
         }
     );
@@ -159,8 +164,16 @@ $(document).ready(function () {
         }
     );
 
+    perm_delete_btn.click(
+        function (e) {
+            var row_id = (fileBinTable.rows('.selected').data())[0].id;
+            fileID = row_id;
+            $('#bin_modal').modal('hide');
+            $('#perm_delete_modal').modal('show'); 
+        }
+    );
+
     function restore_file(id) {
-        console.log(id);
         $.ajax(
             {
                 method: 'GET',
@@ -171,6 +184,7 @@ $(document).ready(function () {
             .done(
                 function (data) {
                     console.log(data);
+                    fileBinTable.ajax.reload();
                 })
             .fail(
                 function (data) {
@@ -180,6 +194,8 @@ $(document).ready(function () {
 
     $('#bin_modal_trigger').click(
         function (e) {
+            $('#perm_delete_btn').attr('disabled','true');
+            $('#restore_btn').attr('disabled','true');
             fileBinTable.ajax.reload();
         }
     );
@@ -325,8 +341,6 @@ $(document).ready(function () {
                     })
                 .fail(
                     function (xhr, status, error) {
-                        refresh();
-
                         if (xhr.readyState === 0) {
                             uploadErrorBtnState('Upload has been interrupted');
                             retry_button
@@ -391,7 +405,6 @@ $(document).ready(function () {
     $('#deleteFile_btn').click(
         function (e) {
             e.preventDefault();
-
             $.ajax(
                 {
                     method: 'GET',
@@ -401,7 +414,34 @@ $(document).ready(function () {
                 })
                 .done(
                     function (data) {
+                        fileID = "";
                         fileDisplayTable.ajax.reload();
+                    })
+                .fail(
+                    function (data) {
+                        console.log(data + " error");
+                    });
+
+            $('#delete_modal').modal('hide');
+        }
+    );
+
+    // delete ajax request
+    $('#permDeleteFile_btn').click(
+        function (e) {
+            e.preventDefault();
+            console.log(fileID);
+            $.ajax(
+                {
+                    method: 'GET',
+                    async: true,
+                    url: 'permanent_delete/' + fileID,
+                    datatype: 'json'
+                })
+                .done(
+                    function (data) {
+                        fileID = "";
+                        $('#perm_delete_modal').modal('hide');
                     })
                 .fail(
                     function (data) {
